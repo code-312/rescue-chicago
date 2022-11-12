@@ -47,7 +47,7 @@ To learn more about the journeys of these rescued pups, we pulled data from the 
 1. Clone the repository with Git:
 
 ```bash
-https://github.com/Code-For-Chicago/Code-for-Chicago-Data-Workgroup.git
+https://github.com/Code-For-Chicago/rescue-chicago.git
 ```
 2. Create a file called `.env` in the root directory. This file is ignored via the .gitignore file to avoid committing secrets.
 
