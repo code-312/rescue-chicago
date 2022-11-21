@@ -3,7 +3,7 @@
 
 <div align="center"><img src="https://user-images.githubusercontent.com/89172742/193910009-1faf3fe1-d991-4ccf-afde-fa4d448f27aa.png" width="552" height="278" /></div>
 
-<h5 align="center">  By:  <a href="https://github.com/kaylarobinson077">Kayla Robinson</a>, <a href="https://github.com/TheeChris">Chris Lynch</a>, <a href="https://github.com/ecooperman">Evan Cooperman</a>, Joseph Adorno, Cara Karter - <a href="https://codeforchicago-rescuechi.herokuapp.com/"><i>Live site</i></h5>
+<h5 align="center">  By:  <a href="https://github.com/kaylarobinson077">Kayla Robinson</a>, <a href="https://github.com/TheeChris">Chris Lynch</a>, <a href="https://github.com/ecooperman">Evan Cooperman</a>, Joseph Adorno, Cara Karter, <a href="https://github.com/Jared-Kunhart">Jared Kunhard</a>, <a href="https://github.com/VegetablePC">Jon Hall</a>, <a href="https://github.com/JJD129">Jhen Dimaano</a>, <a href="https://github.com/Sailia">Syema Ailia</a> - <a href="https://codeforchicago-rescuechi.herokuapp.com/"><i>Live site</i></h5>
 
 ### Table of Contents
 - [Main purpose](#main)
@@ -170,7 +170,3 @@ Add other fields from Petfinder to the dashboard including organizations and lis
 
 ### [Code for Chicago](https://codeforchicago.org/)
 <img src="https://user-images.githubusercontent.com/89172742/193916463-96b92d44-9696-4207-b82b-bafe52f8ce61.png" width="594" height="303" />
-
-
-### Contributers -
-**Kayla Robinson, Chris Lynch, Evan Cooperman, Joseph Adorno, Cara Karter**
