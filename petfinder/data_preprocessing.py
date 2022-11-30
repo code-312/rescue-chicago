@@ -15,6 +15,11 @@ df_colors = df["colors"].apply(pd.Series)
 df_colors.columns = [f"colors_{col}" for col in df_colors.columns]
 df = pd.concat([df.drop(["colors"], axis=1), df_colors], axis=1)
 
+# breed counts <25 will be replaced with other
+counts = df["breed_primary"].value_counts()
+repl = counts[counts <= 25].index
+df["breed_primary"].replace(repl, 'Other')
+
 # explode the attribute column
 df_attributes = df["attributes"].apply(pd.Series)
 df_attributes.columns = [f"attribute_{col}" for col in df_attributes.columns]
@@ -63,5 +68,11 @@ df["env_children"] = df["env_children"].astype(bool).astype(int)
 df["env_dogs"] = df["env_dogs"].astype(bool).astype(int)
 df["env_cats"] = df["env_cats"].astype(bool).astype(int)
 
+# one hot encoding tags
+df["tags"] = df["tags"].str.join(',').str.lower()
+new = df["tags"].str.split(pat = ",", expand=True).apply(lambda x : x.value_counts(), axis = 1).fillna(0).astype(int)
+df = pd.concat([df.drop(["tags"], axis=1), new], axis = 1)
+
 # One hot encoding categorical variables
-df = pd.get_dummies(df, columns =["gender","coat","colors_primary","colors_secondary","colors_tertiary"])
+df = pd.get_dummies(df, columns =["breed_primary","gender","coat","colors_primary","colors_secondary","colors_tertiary"])
+
