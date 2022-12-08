@@ -1,9 +1,14 @@
 import pandas as pd
-import numpy as np
+from pathlib import Path
 
-df = pd.read_pickle("data/chicago_animals.pkl")
+DATA_FOLDER = Path(__file__).parent.parent / "petfinder-data" / "data"
+MODEL_DATA_FOLDER = Path(__file__).parent / "data"
 
-df = df.drop(['id', 'organization_id', 'url','type','species', 'name', 'description','contact', '_links'], axis=1)
+df = pd.read_pickle(DATA_FOLDER / "chicago_animals_cleaned.pkl")
+
+print(df.columns)
+
+df = df.drop(['id', 'organization_id', 'name', 'description','contact', '_links'], axis=1)
 
 # explode the breeds column
 df_breeds = df["breeds"].apply(pd.Series)
@@ -76,3 +81,5 @@ df = pd.concat([df.drop(["tags"], axis=1), new], axis = 1)
 # One hot encoding categorical variables
 df = pd.get_dummies(df, columns =["breed_primary","gender","coat","colors_primary","colors_secondary","colors_tertiary"])
 
+MODEL_DATA_FOLDER.mkdir(parents=True, exist_ok=True)
+df.to_pickle(MODEL_DATA_FOLDER / "preprocessed_data.pkl")
