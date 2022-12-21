@@ -2,10 +2,10 @@ import os
 import sqlalchemy
 from pathlib import Path
 import pandas as pd
-from config import DATABASE_URL, HEROKU_URL
+from config import DATABASE_URL, HEROKU_URL, City_State
 
 DATA_DIR = Path(__file__).parent / "data"
-FILE_TO_APPEND = "chicago_animals_cleaned.pkl"
+FILE_TO_APPEND = f"{City_State.replace(', ', '_').lower()}_animals_cleaned.pkl"
 TARGET_TABLE_NAME = "petfinder_with_dates"
 
 def get_db_uri():
@@ -17,7 +17,7 @@ def get_db_uri():
         Set uri = HEROKU_URL to put the data on Heroku's database. (Default)
         Set uri = DATABASE_URL to put the data on your local psql database.
     """
-    uri = HEROKU_URL
+    uri = DATABASE_URL
     if uri is not None:
         # sqlalchemy has a little bit of funky behavior, see this heroku help article:
         # https://help.heroku.com/ZKNTJQSK/why-is-sqlalchemy-1-4-x-not-connecting-to-heroku-postgres

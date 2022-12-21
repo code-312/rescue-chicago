@@ -3,7 +3,7 @@ import pandas as pd
 import requests
 from pathlib import Path
 import pickle
-from config import PETFINDER_KEY, PETFINDER_SECRET
+from config import PETFINDER_KEY, PETFINDER_SECRET, City_State
 
 DATA_DIR = Path(__file__).parent / "data"
 
@@ -55,12 +55,11 @@ def get_organizations() -> pd.DataFrame:
     """
     Returns
     -------
-    List of all organizations listed on PetFinder within 100 miles of Chicago, formatted
+    List of all organizations listed on PetFinder within 100 miles of your city, state, formatted
     in a pandas DataFrame
     """
 
     token = get_token()
-
     # this is where we'll save our results
     DATA_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -69,7 +68,7 @@ def get_organizations() -> pd.DataFrame:
     headers = {"Authorization": f"Bearer {token}"}
 
     params = {
-        "location": "Chicago, IL",
+        "location": City_State,
         "sort": "distance",
         "distance": 100,
         "limit": 100,
@@ -122,8 +121,8 @@ def get_organizations() -> pd.DataFrame:
 
     # save to pickle file
     DATA_DIR.mkdir(parents=True, exist_ok=True)
-    df_orgs.to_pickle(DATA_DIR / "chicago_orgs.pkl")
-    df_orgs.to_csv(DATA_DIR / "chicago_orgs.csv", index=False)
+    df_orgs.to_pickle(DATA_DIR / f"{City_State.replace(', ', '_').lower()}_orgs.pkl")
+    df_orgs.to_csv(DATA_DIR / f"{City_State.replace(', ', '_').lower()}_orgs.csv", index=False)
 
     return df_orgs
 
@@ -146,9 +145,9 @@ def get_animals(
 
     Returns
     -------
-    List of all animals listed on PetFinder within 100 miles of Chicago, formatted
+    List of all animals listed on PetFinder within 100 miles of your city and state, formatted
     in a pandas DataFrame. If max_pages is specified, then returns 100 * max_pages
-    animals sorted by proximity to Chicago
+    animals sorted by proximity to your city and state
     """
 
     token = get_token()
@@ -165,7 +164,7 @@ def get_animals(
         "type": type,
         "status": status,
         "organization": organization,
-        "location": "Chicago, IL",
+        "location": City_State,
         "sort": "distance",
         "distance": 100,
         "limit": 100,
@@ -223,8 +222,8 @@ def get_animals(
     df_animals = pd.DataFrame(all_animals)
 
     # save to pickle and csv file
-    df_animals.to_pickle(DATA_DIR / "chicago_animals.pkl")
-    df_animals.to_csv(DATA_DIR / "chicago_animals.csv", index=False)
+    df_animals.to_pickle(DATA_DIR / f"{City_State.replace(', ', '_').lower()}_animals.pkl")
+    df_animals.to_csv(DATA_DIR / f"{City_State.replace(', ', '_').lower()}_animals.csv", index=False)
 
     return df_animals
 
