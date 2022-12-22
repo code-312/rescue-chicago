@@ -17,7 +17,7 @@ def get_db_uri():
         Set uri = HEROKU_URL to put the data on Heroku's database. (Default)
         Set uri = DATABASE_URL to put the data on your local psql database.
     """
-    uri = DATABASE_URL
+    uri = HEROKU_URL
     if uri is not None:
         # sqlalchemy has a little bit of funky behavior, see this heroku help article:
         # https://help.heroku.com/ZKNTJQSK/why-is-sqlalchemy-1-4-x-not-connecting-to-heroku-postgres

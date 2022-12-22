@@ -78,19 +78,6 @@ def find_org(org_id, org_name) -> pd.DataFrame:
 
     return org_dict_df
 
-def location(city_state) -> pd.DataFrame:
-    loc = city_state.split(', ')
-    city = pd.Series([loc[0]], dtype="string")
-    city.name = "city"
-
-    state = pd.Series([loc[1]], dtype="string")
-    state.name = "state"
-
-    city_state_df = pd.concat([city, state], axis=1)
-
-    return city_state_df
-
-
 if __name__ == "__main__":
 
     # read in the raw data for animals
@@ -118,11 +105,13 @@ if __name__ == "__main__":
     # we can keep some columns as-is
     cols_as_is = ["id", "age", "gender", "size", "coat", "name"]
 
-    # add in a city and state column
-    city = location(City_State)
-
     # concatenate the final columns
-    df_final = pd.concat([df_raw[cols_as_is], city, org, los, breeds, colors, environ, attributes], axis=1)
+    df_final = pd.concat([df_raw[cols_as_is], org, los, breeds, colors, environ, attributes], axis=1)
+
+    # add in a city and state column
+    loc = City_State.split(', ')
+    df_final['city'] = loc[0]
+    df_final['state'] = loc[1]
 
     # save cleaned dataframe to a pickle file
     df_final.to_pickle(DATA_FOLDER / f"{City_State.replace(', ', '_').lower()}_animals_cleaned.pkl")
