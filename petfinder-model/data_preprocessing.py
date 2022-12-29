@@ -2,7 +2,6 @@ import pandas as pd
 from pathlib import Path
 
 DATA_FOLDER = Path(__file__).resolve().parents[1] / "petfinder-data" / "data"
-print(DATA_FOLDER.resolve())
 
 MODEL_DATA_FOLDER = Path(__file__).parent / "data"
 
@@ -78,9 +77,6 @@ df["good_with_cats"] = df["good_with_cats"].astype(bool).astype(int)
 
 # One hot encoding categorical variables
 df = pd.get_dummies(df, columns =["breed_primary","gender","coat","color_primary","color_secondary","color_tertiary"])
-
-for c in df.columns:
-    print(f'"{c}",')
 
 MODEL_DATA_FOLDER.mkdir(parents=True, exist_ok=True)
 df.to_pickle(MODEL_DATA_FOLDER / "preprocessed_data.pkl")
