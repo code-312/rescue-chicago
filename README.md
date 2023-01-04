@@ -49,19 +49,21 @@ To learn more about the journeys of these rescued pups, we pulled data from the 
 ```bash
 https://github.com/Code-For-Chicago/rescue-chicago.git
 ```
-2. Create a file called `.env` in the root directory. This file is ignored via the .gitignore file to avoid committing secrets.
 
-3. Open `.env` in a text editor and add this as the contents, replacing the second part with your personal API keys. There is also a .env.example to follow for more help.
+2. You can request a Petfinder API key and secret [here](https://www.petfinder.com/developers/).
 
-4. You can request a Petfinder API
-key and secret [here](https://www.petfinder.com/developers/).
+3. Create a file called `.env` in the root directory. This file is ignored via the .gitignore file to avoid committing secrets.
+
+4. Open `.env` in a text editor and add below as the contents, replacing the parts needed with your personal keys. There is also an .env.example to follow for more help.
+
 ```
 PETFINDER_KEY=REPLACE_ME_WITH_PETFINDER_KEY
 PETFINDER_SECRET=REPLACE_ME_WITH_PETFINDER_SECRET
-DATABASE_URL=postgresql://username_goes_here:password_goes_here@localhost/app_name_here
+HEROKU_POSTGRESQL_AMBER_URL=REPLACE_ME_WITH_HEROKU_URI
 PETFINDER_STREAMLIT_SHOW_QUERIES=False
 PETFINDER_STREAMLIT_CHART_TYPE=advanced
-HEROKU_POSTGRESQL_AMBER_URL=REPLACE_ME_WITH_HEROKU_URI
+DATABASE_URL=postgresql://username:password@localhost/app_name
+LOCATION=Chicago, IL
 ```
 - Set PETFINDER_STREAMLIT_SHOW_QUERIES to False or True if you want to see queries shown on the frontend. False is the default.
 - Set PETFINDER_STREAMLIT_CHART_TYPE to simple, advanced or all, depending which type of chart you would like to see. advanced is the default.
@@ -80,16 +82,28 @@ streamlit run projects/rescuechi/petfinder-streamlit/Home.py
 ```
 Open the Network URL it gives you in your browser.
 
+#### Notes for running the data gathering/putting files below
+
+max_pages: max_pages is the Maximum number of pages to query over. It's at the bottom of data_getter.py. Currently it's set to 10 pages so API Key usage doesn't max out on the first run of this file. Set max_pages=None to pull all data.
+
+data_putter.py: When this file is run, it stores any information gathered from data_getter.py directly to Heroku's Database. Heroku's DB is capped at 10,000,000 rows of data.
+
+### Data Runner
+
+As an alternative to running Data Getter/Cleaner/Putter one at a time in the below directions, you can run the below command in your root directory to run all three at once.
+```bash
+bash data_runner.sh
+```
+
 ### Data Getter
 
-To pull down the first 100K results for dogs in and
-around Chicago, you can run:
+To pull down the first 100K results for dogs in and around Chicago, you can run:
 
 ```python
 python data_getter.py
 ```
 
-This will create a file called `chicago_animals.pkl` in the `rescuechi/petfinder/data`
+This will create a file called `city_state_animals.pkl` in the `rescuechi/petfinder/data`
 folder.
 
 ### Data Cleaner
@@ -103,7 +117,7 @@ The script can be run by calling:
 python data_cleaner.py
 ```
 
-This will create a file called `chicago_animals_clean.pkl` in the
+This will create a file called `city_state_animals_clean.pkl` in the
 `rescuechi/petfinder/data` folder.
 
 
@@ -129,13 +143,13 @@ CLI by following the instructions [here](https://devcenter.heroku.com/articles/h
 After this is installed and configured, you can run the following command:
 
 ```bash
-export DATABASE_URL=$(heroku config:get HEROKU_POSTGRESQL_AMBER_URL --app  codeforchicago-rescuechi)
+export HEROKU_URL=$(heroku config:get HEROKU_POSTGRESQL_AMBER_URL --app  codeforchicago-rescuechi)
 ```
 
 You can test that this worked by running
 
 ```bash
-echo $DATABASE_URL
+echo $HEROKU_URL
 ```
 
 and checking that it prints back your uri.
@@ -151,16 +165,16 @@ CREATE USER username WITH PASSWORD 'password' CREATEDB;
 CREATE DATABASE app_name WITH OWNER username;
 ```
 
-Add your updated username, password and database name to your .env file. The DATABASE_URL line in your .env file should look like this with your details instead.
-> DATABASE_URL=postgresql://username:password@localhost/app_name
+Add a DATABASE_URL with your updated username, password and database name to your .env file. The DATABASE_URL line in your .env file should look like this with your details instead.
+> DATABASE_URL=postgresql://username_goes_here:password_goes_here@localhost/app_name_here
 
-Once that's done you can follow the Data Getter & Setter guide up above. In the Data Putter, you will need to set the uri variable to DATABASE_URL instead of HEROKU_URL. I recommend using [Postbird](https://github.com/Paxa/postbird) or a similar app to view the data.
-
-<sub>* **Note** - While you can see the data locally with postbird, it doesn't work through Streamlit yet.</sub>
+Once that's done you can follow the Data Getter & Setter guide up above. In the Data Putter, you will need to set the uri variable to DATABASE_URL instead of HEROKU_URL. I recommend using [TablePlus](https://tableplus.com/) or [Postbird](https://github.com/Paxa/postbird) to view the data.
 
 ## What's next
-Expand dataset to other major metro areas in the US to look at differences.
-Add other fields from Petfinder to the dashboard including organizations and listing content. Expand to other pets.
+✅ Expand dataset to other major metro areas in the US.
+✅ Add other fields from Petfinder.
+Adoptability Rating -  Train regression model to predict LOS.
+Expand to other pets.
 
 ## Conclusion and Contributions
 <h5>Project made during Women Who Code Hackathon for Social Good 2022.</h5>
