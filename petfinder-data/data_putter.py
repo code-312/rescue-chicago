@@ -2,10 +2,10 @@ import os
 import sqlalchemy
 from pathlib import Path
 import pandas as pd
-from config import DATABASE_URL, HEROKU_URL, City_State
+from config import DATABASE_URL, HEROKU_URL
 
 DATA_DIR = Path(__file__).parent / "data"
-FILE_TO_APPEND = f"{City_State.replace(', ', '_').lower()}_animals_cleaned.pkl"
+FILE_TO_APPEND = "chicago_animals_cleaned.pkl"
 TARGET_TABLE_NAME = "petfinder_with_dates"
 
 def get_db_uri():

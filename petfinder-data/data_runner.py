@@ -3,55 +3,19 @@ import pandas as pd
 import requests
 from pathlib import Path
 import pickle
+import data_getter, data_cleaner, data_putter
+from halo import Halo
 from config import PETFINDER_KEY, PETFINDER_SECRET
 
 DATA_DIR = Path(__file__).parent / "data"
 
+spinner = Halo(text='Loading', spinner='dots')
+location = input('Location to Query. \n Phrase in the format below - Example: \n Chicago, IL \n ')
+pages = input('How many pages of data to return? Example: 10 \n Use 0 to specify the max amount of pages returned (Returning max amount of pages may max out API Key usage) \n ')
+# data = input('Store all that data locally or in Heroku\'s Database? \n ')
+# clean = input('Remove all that data locally after storing it Heroku\'s Database? \n ')
 
-def check_for_secrets():
-    """
-    Checks that you have the required credentials in your environment
-    """
-    assert os.getenv("PETFINDER_KEY") is not None
-    assert os.getenv("PETFINDER_SECRET") is not None
-
-
-def get_token() -> str:
-    """
-    Returns
-    -------
-    Access token for the PetFinder API
-
-    Notes
-    -----
-    This is the example of getting a token from the petfinder docs:
-    curl -d "grant_type=client_credentials&client_id={CLIENT-ID}&client_secret=\
-        {CLIENT-SECRET}" https://api.petfinder.com/v2/oauth2/token
-    """
-    # make sure you have required variables in your environment
-    check_for_secrets()
-
-    url = "https://api.petfinder.com/v2/oauth2/token"
-
-    CLIENT_ID = os.getenv("PETFINDER_KEY")
-    CLIENT_SECRET = os.getenv("PETFINDER_SECRET")
-
-    headers = {
-        "Content-Type": "application/x-www-form-urlencoded",
-    }
-
-    data = f"grant_type=client_credentials&client_id={CLIENT_ID}&client_secret={CLIENT_SECRET}"
-
-    response = requests.post(url, headers=headers, data=data)
-
-    # make sure it succeeded
-    assert response.status_code == 200
-
-    # just return the access_token
-    return response.json()["access_token"]
-
-
-def get_organizations() -> pd.DataFrame:
+def get_organizations(location) -> pd.DataFrame:
     """
     Returns
     -------
@@ -59,7 +23,7 @@ def get_organizations() -> pd.DataFrame:
     in a pandas DataFrame
     """
 
-    token = get_token()
+    token = data_getter.get_token()
     # this is where we'll save our results
     DATA_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -68,7 +32,7 @@ def get_organizations() -> pd.DataFrame:
     headers = {"Authorization": f"Bearer {token}"}
 
     params = {
-        "location": "Chicago, IL",
+        "location": location,
         "sort": "distance",
         "distance": 100,
         "limit": 100,
@@ -79,6 +43,7 @@ def get_organizations() -> pd.DataFrame:
     response = requests.get(url, headers=headers, params=params)
 
     # make sure that it actually worked
+
     assert response.status_code == 200
 
     # save temp results to file, so that we have them if something goes awry
@@ -93,8 +58,8 @@ def get_organizations() -> pd.DataFrame:
     # this is how many total orgs we expect to catch
     total_count = pagination["total_count"]
 
-    print(f"Found {total_count} organizations.")
-
+    print(f"Found {total_count} organizations in {location}...")
+    spinner.start()
     # start a list of orgs that we'll append to
     all_orgs = response.json()["organizations"]
 
@@ -113,7 +78,7 @@ def get_organizations() -> pd.DataFrame:
         with open(DATA_DIR / "backup" / f"orgs_page_{page}.pkl", "wb") as f:
             pickle.dump(response.json()["organizations"], f)
 
-    # check that we actually got all organizations
+    # check that we acutally got all organizations
     assert len(all_orgs) == total_count
 
     # convert to pandas
@@ -121,15 +86,13 @@ def get_organizations() -> pd.DataFrame:
 
     # save to pickle file
     DATA_DIR.mkdir(parents=True, exist_ok=True)
-    df_orgs.to_pickle(DATA_DIR / "chicago_orgs.pkl")
-    df_orgs.to_csv(DATA_DIR / "chicago_orgs.csv", index=False)
-
+    print(f"Saving to a pickle and csv file in petfinder-data/data/{location.replace(', ', '_').lower()}_orgs.pkl")
+    df_orgs.to_pickle(DATA_DIR / f"{location.replace(', ', '_').lower()}_orgs.pkl")
+    df_orgs.to_csv(DATA_DIR / f"{location.replace(', ', '_').lower()}_orgs.csv", index=False)
+    spinner.stop()
     return df_orgs
 
-
-def get_animals(
-    type="dog", status="adopted", organization=None, max_pages=None
-) -> pd.DataFrame:
+def get_animals(location, pages, type="dog", status="adopted", organization=None) -> pd.DataFrame:
     """
     Parameters
     ----------
@@ -150,7 +113,7 @@ def get_animals(
     animals sorted by proximity to your city and state
     """
 
-    token = get_token()
+    token = data_getter.get_token()
 
     # this is where we'll save our results
     DATA_DIR.mkdir(parents=True, exist_ok=True)
@@ -164,7 +127,7 @@ def get_animals(
         "type": type,
         "status": status,
         "organization": organization,
-        "location": "Chicago, IL",
+        "location": location,
         "sort": "distance",
         "distance": 100,
         "limit": 100,
@@ -173,6 +136,9 @@ def get_animals(
 
     # make the first call, and check how many total pages there are
     response = requests.get(url, headers=headers, params=params)
+
+    if response.status_code == 400:
+        quit("Invalid City - Is the spelling/syntax correct? \n Example: Indianapolis, IN")
 
     # make sure that it actually worked
     assert response.status_code == 200
@@ -189,15 +155,23 @@ def get_animals(
     # this is how many total animals we expect to catch
     total_count = pagination["total_count"]
 
-    print(f"Found {total_count} animals.")
+    # Make sure user input can be converted to a Integer
+    try:
+        num_pages = int(pages)
+        if num_pages == 0:
+            num_pages = pagination["total_pages"]
+        elif num_pages > pagination["total_pages"]:
+            num_pages = pagination["total_pages"]
+    except ValueError:
+        quit("Invalid Page Count \n Could not convert data to an integer. \n Use 0 for max pages or specify a number. Example: 10")
 
+    print(f"Found {total_count} animals. \n Fetching data based off of page count, this may take a while... \n ")
+    spinner.start()
     # start a list of animals that we'll append to
     all_animals = response.json()["animals"]
 
     # iterate over all remaining pages, starting with the 2nd page
     # if we set a value for max number of pages, only pull that many
-    if max_pages is not None:
-        num_pages = max_pages
 
     for page in range(2, num_pages + 1):
         # update params for current page
@@ -222,14 +196,14 @@ def get_animals(
     df_animals = pd.DataFrame(all_animals)
 
     # save to pickle and csv file
-    df_animals.to_pickle(DATA_DIR / "chicago_animals.pkl")
-    df_animals.to_csv(DATA_DIR / "chicago_animals.csv", index=False)
-
+    print(f"Saving to a pickle and csv file in petfinder-data/data/{location.replace(', ', '_').lower()}_animals.pkl")
+    df_animals.to_pickle(DATA_DIR / f"{location.replace(', ', '_').lower()}_animals.pkl")
+    df_animals.to_csv(DATA_DIR / f"{location.replace(', ', '_').lower()}_animals.csv", index=False)
+    spinner.stop()
     return df_animals
 
-if __name__=="__main__":
-    # max_pages: Maximum number of pages to query over. Set max_pages to max_pages=None to pull all data.
-    get_animals(
-        type="dog", status="adopted", organization=None, max_pages=10
-    )
-    get_organizations()
+if __name__ == '__main__':
+    get_animals(location, pages)
+    get_organizations(location)
+    print("Done fetching data...")
+    print("Cleaning that data... \n Calculating length of stay...")

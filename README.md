@@ -78,7 +78,7 @@ pip install -r requirements.txt
 
 To start Streamlit locally:
 ```bash
-streamlit run projects/rescuechi/petfinder-streamlit/Home.py
+streamlit run petfinder-streamlit/Home.py
 ```
 Open the Network URL it gives you in your browser.
 
