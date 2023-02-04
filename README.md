@@ -46,9 +46,9 @@ To learn more about the journeys of these rescued pups, we pulled data from the 
 
 1. Clone the repository with Git:
 
-```bash
-https://github.com/Code-For-Chicago/rescue-chicago.git
-```
+    ```bash
+    https://github.com/Code-For-Chicago/rescue-chicago.git
+    ```
 
 2. Request a Petfinder API key and secret [here](https://www.petfinder.com/developers/).
 
@@ -82,7 +82,7 @@ https://github.com/Code-For-Chicago/rescue-chicago.git
     ```
     Open the Network URL it gives you in your browser.
 
-### Data Runner
+### Data Runner (Recommended)
 
 As an alternative to running Data Getter/Cleaner/Putter one at a time in the below directions, you can run the below command in your root directory to run all three at once in a CLI.
 Enter the specific location and amount of pages you'd like to fetch.
@@ -95,7 +95,7 @@ python3 petfinder-data/data_runner.py
 To pull down the first 100K results for dogs in and around Chicago, you can run:
 
 ```python
-python data_getter.py
+python3 petfinder-data/data_getter.py
 ```
 
 max_pages: max_pages is the Maximum number of pages to query over. It's at the bottom of data_getter.py. Currently it's set to 10 pages so API Key usage doesn't max out on the first run of this file. Set max_pages=None to pull all data.
@@ -111,7 +111,7 @@ python requirements is needed.
 The script can be run by calling:
 
 ```python
-python data_cleaner.py
+python3 petfinder-data/data_cleaner.py
 ```
 
 This will create a file called `city_state_animals_clean.pkl` in the
@@ -167,12 +167,17 @@ CREATE DATABASE app_name WITH OWNER username;
 Add a DATABASE_URL with your updated username, password and database name to your .env file. The DATABASE_URL line in your .env file should look like this with your details instead.
 > DATABASE_URL=postgresql://username_goes_here:password_goes_here@localhost/app_name_here
 
-Once that's done you can follow the Data Getter & Setter guide up above. In the Data Putter, you will need to set the uri variable to DATABASE_URL instead of HEROKU_URL. I recommend using [TablePlus](https://tableplus.com/) or [Postbird](https://github.com/Paxa/postbird) to view the data.
+Once that's done you can follow the guide up above. I recommend using [TablePlus](https://tableplus.com/) or [Postbird](https://github.com/Paxa/postbird) to view the data.
 
 ## What's next
 ✅ Expand dataset to other major metro areas in the US.
+
 ✅ Add other fields from Petfinder.
+
 Adoptability Rating -  Train regression model to predict LOS.
+
+Compare Organizations and their length of stay.
+
 Expand to other pets.
 
 ## Conclusion and Contributions
