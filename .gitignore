@@ -3,6 +3,11 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Data Files
+.pkl
+.csv
+petfinder-data/data
+
 # C extensions
 *.so
 
@@ -160,7 +165,3 @@ cython_debug/
 .idea/
 
 .DS_Store
-
-# Data Files
-.pkl
-.csv
