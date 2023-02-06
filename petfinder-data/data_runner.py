@@ -11,9 +11,9 @@ from config import DATABASE_URL, HEROKU_URL
 DATA_DIR = Path(__file__).parent / "data"
 
 spinner = Halo(spinner='dots')
-location = input('-Enter your location ("City, ST") to Query. Example: Chicago, IL \n')
-pages = input('-How many pages of data to return? Example: 10 \n -Use 0 to specify the MAX amount of pages. (Returning MAX amount of pages may use up all your API Key requests for the day.) \n')
-data = input('-Where would you like to store the data? Heroku or Local \n')
+location = input('- Enter your location ("City, ST") to Query. Example: Chicago, IL \n')
+pages = input('- How many pages of data to return? Example: 10 \n- Use 0 to specify the MAX amount of pages. (Returning MAX amount of pages may use up all your API Key requests for the day.) \n')
+data = input('- Where would you like to store the data? Heroku or Local \n')
 # clean = input('Delete the petfinder-data/data/backup folder? Yes/No')
 # -Type Heroku to push to Heroku\'s Database \n -Type Local to store all that data locally.
 
