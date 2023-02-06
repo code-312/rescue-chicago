@@ -267,8 +267,8 @@ def data_pusher(engine):
 
 
 if __name__ == '__main__':
-    get_animals(location, pages)
     get_organizations(location)
+    get_animals(location, pages)
     data_sorter(location)
     uri = get_uri(data)
     engine = sqlalchemy.create_engine(uri, echo=False)
