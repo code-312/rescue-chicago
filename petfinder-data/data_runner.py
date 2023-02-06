@@ -255,6 +255,7 @@ def get_uri(data):
         )
 
 def data_pusher(engine):
+    print(f"Pushing to {data} database.")
     data_pusher = Halo(text='Appending data to table. Checking for duplicate rows.', spinner='dots')
     data_pusher.start()
     file = f"{location.replace(', ', '_').lower()}_animals_cleaned.pkl"
