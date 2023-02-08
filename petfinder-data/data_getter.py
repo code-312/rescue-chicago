@@ -55,12 +55,11 @@ def get_organizations() -> pd.DataFrame:
     """
     Returns
     -------
-    List of all organizations listed on PetFinder within 100 miles of Chicago, formatted
+    List of all organizations listed on PetFinder within 100 miles of your city, state, formatted
     in a pandas DataFrame
     """
 
     token = get_token()
-
     # this is where we'll save our results
     DATA_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -114,7 +113,7 @@ def get_organizations() -> pd.DataFrame:
         with open(DATA_DIR / "backup" / f"orgs_page_{page}.pkl", "wb") as f:
             pickle.dump(response.json()["organizations"], f)
 
-    # check that we acutally got all organizations
+    # check that we actually got all organizations
     assert len(all_orgs) == total_count
 
     # convert to pandas
@@ -146,9 +145,9 @@ def get_animals(
 
     Returns
     -------
-    List of all animals listed on PetFinder within 100 miles of Chicago, formatted
+    List of all animals listed on PetFinder within 100 miles of your city and state, formatted
     in a pandas DataFrame. If max_pages is specified, then returns 100 * max_pages
-    animals sorted by proximity to Chicago
+    animals sorted by proximity to your city and state
     """
 
     token = get_token()
@@ -229,7 +228,7 @@ def get_animals(
     return df_animals
 
 if __name__=="__main__":
-    # Set max_pages to None to pull all data
+    # max_pages: Maximum number of pages to query over. Set max_pages to max_pages=None to pull all data.
     get_animals(
         type="dog", status="adopted", organization=None, max_pages=10
     )

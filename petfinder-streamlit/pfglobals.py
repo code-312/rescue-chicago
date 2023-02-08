@@ -63,11 +63,9 @@ def create_array_of_db_values(db_column):
         """ % (db_column, DATABASE_TABLE, db_column)
     #st.markdown(list_values_query)
     results = run_query(list_values_query, conn_no_dict)
-
     values_array = []
     for value in results:
         values_array.append(value[0])
-
     return values_array
 
 
@@ -81,7 +79,6 @@ def create_select_boxes(db_column, text, col1, col2, is_boolean):
     else:
         values = create_array_of_db_values(db_column)
     values.insert(0, DEFAULT_DROPDOWN_TEXT)
-
     with col1:
         select_box_left = st.selectbox(
             text,
@@ -95,6 +92,7 @@ def create_select_boxes(db_column, text, col1, col2, is_boolean):
             values,
             key=db_column + "_right"
         )
+
     return {"db_column": db_column, "db_col_type": db_col_type, "left": select_box_left, "right": select_box_right}
 
 

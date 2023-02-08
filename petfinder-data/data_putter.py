@@ -70,10 +70,10 @@ def print_row_count(engine: sqlalchemy.engine.Engine):
         print(f"Target table {TARGET_TABLE_NAME} does not yet exist.")
     else:
         num_rows = engine.execute(f"SELECT count(*) FROM {TARGET_TABLE_NAME}").fetchone()
-        print(f"There are {num_rows} rows in table {TARGET_TABLE_NAME}")
+        print(f"There are now {num_rows} rows in table {TARGET_TABLE_NAME}")
 
 
-def append_to_table(engine: sqlalchemy.engine.Engine):
+def append_to_table(engine: sqlalchemy.engine.Engine, file):
     """Appends rows from the globally specified file to append to the target table.
 
     Parameters
@@ -83,7 +83,10 @@ def append_to_table(engine: sqlalchemy.engine.Engine):
     """
 
     # this is the cleaned data that we'll append to the database
-    df = pd.read_pickle(DATA_DIR / FILE_TO_APPEND)
+    if file is not None:
+        df = pd.read_pickle(DATA_DIR / file)
+    else:
+        df = pd.read_pickle(DATA_DIR / FILE_TO_APPEND)
 
     # append to the table if it already exists
     df.to_sql(TARGET_TABLE_NAME, con=engine, if_exists="append")
@@ -123,7 +126,7 @@ if __name__=="__main__":
     print_row_count(engine)
 
     # append datafile to table
-    append_to_table(engine)
+    append_to_table(engine, file=None)
 
     # check the current number of rows in the table
     print("After appending data: ")

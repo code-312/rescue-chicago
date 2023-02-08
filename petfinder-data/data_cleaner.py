@@ -77,7 +77,6 @@ def find_org(org_id, org_name) -> pd.DataFrame:
 
     return org_dict_df
 
-
 if __name__ == "__main__":
 
     # read in the raw data for animals
@@ -107,6 +106,11 @@ if __name__ == "__main__":
 
     # concatenate the final columns
     df_final = pd.concat([df_raw[cols_as_is], org, los, breeds, colors, environ, attributes], axis=1)
+
+    # add in a city and state column
+    loc = "Chicago, IL".split(', ')
+    df_final['city'] = loc[0]
+    df_final['state'] = loc[1]
 
     # save cleaned dataframe to a pickle file
     df_final.to_pickle(DATA_FOLDER / "chicago_animals_cleaned.pkl")
