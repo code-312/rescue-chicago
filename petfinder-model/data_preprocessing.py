@@ -26,6 +26,8 @@ counts = df["breed_primary"].value_counts()
 repl = counts[counts <= 25].index
 df["breed_primary"].replace(repl, 'Other')
 
+df['breed_secondary'] = np.where(df['breed_secondary'].isnull(), 0, 1)
+
 # # explode the attribute column
 # df_attributes = df["attributes"].apply(pd.Series)
 # df_attributes.columns = [f"attribute_{col}" for col in df_attributes.columns]
