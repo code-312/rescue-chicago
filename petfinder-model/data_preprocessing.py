@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from pathlib import Path
 
 DATA_FOLDER = Path(__file__).resolve().parents[1] / "petfinder-data" / "data"
@@ -39,7 +40,7 @@ df['breed_secondary'] = np.where(df['breed_secondary'].isnull(), 0, 1)
 # df = pd.concat([df.drop(["environment"], axis=1), df_environment], axis=1)
 
 # additional fields that need to be dropped after exploding columns
-df = df.drop(['attribute_declawed','breed_unknown'], axis=1)
+df = df.drop(['attribute_declawed','breed_unknown', 'published_at', 'status_changed_at'], axis=1)
 
 # mapping age and size
 age_dict={
@@ -79,7 +80,7 @@ df["good_with_cats"] = df["good_with_cats"].astype(bool).astype(int)
 # df = pd.concat([df.drop(["tags"], axis=1), new], axis = 1)
 
 # One hot encoding categorical variables
-df = pd.get_dummies(df, columns =["breed_primary","gender","coat","color_primary","color_secondary","color_tertiary"])
+df = pd.get_dummies(df, columns =["breed_primary","gender","coat","color_primary","color_secondary","color_tertiary", "organization_name"])
 
 for c in df.columns:
     print(f'"{c}",')
