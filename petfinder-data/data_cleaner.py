@@ -31,10 +31,10 @@ def calc_los(raw_published_col, raw_status_change_col) -> pd.Series:
 
     los_days = (status_change_dt - published_dt).dt.days
     los_days.name = "los"
-
     los_df = pd.concat([published_dt, status_change_dt, los_days], axis=1)
+    los_df2 = los_df[~(los_df['los'] >= 300)]
 
-    return los_df
+    return los_df2
 
 def explode_column(col, col_prefix) -> pd.DataFrame:
     """
