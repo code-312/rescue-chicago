@@ -8,6 +8,7 @@ import os
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import pfglobals
+import plotly.graph_objects as go
 
 st.markdown("# Chicago Rescue Dog Trends")
 st.markdown("## Other Trends from Petfinder Data")
@@ -81,7 +82,15 @@ st.markdown("Use the filter widget in the sidebar to select a specific attribute
             "graphs illustrate how these characteristics impact the number of dogs waiting for adoption for dogs with "
             "the specified attributes.")
 
+group_labels = ['Group 1', 'Group 2']
+
 leftCol, rightCol = st.columns(2)
+
+with leftCol:
+    st.header(group_labels[0])
+with rightCol:
+    st.header(group_labels[1])
+
 # limit_query = ""
 original_where_clause = where_clause
 
@@ -106,9 +115,28 @@ for select_boxes in all_select_boxes:
     left_values.append({"db_column": select_boxes["db_column"], "db_col_type": select_boxes["db_col_type"], "select_box": select_boxes["left"]})
     right_values.append({"db_column": select_boxes["db_column"], "db_col_type": select_boxes["db_col_type"], "select_box": select_boxes["right"]})
 
+if list(value for value in left_values if value['db_column'] == 'city' and value['select_box'] != 'No value applied'):
+    for value in left_values:
+        if value['db_column'] == 'state':
+            value['select_box'] = 'No value applied'
+
+if list(value for value in right_values if value['db_column'] == 'city' and value['select_box'] != 'No value applied'):
+    for value in right_values:
+        if value['db_column'] == 'state':
+            value['select_box'] = 'No value applied'
+
+df = pfglobals.get_comparison_dataframe(left_values, right_values, original_where_clause, "breed_primary", "los")
+fig = go.Figure()
+
+for col in ["left_group"]:
+    fig.add_bar(x=df.index, y=df[col], name="Group 1")
+for col in ["right_group"]:
+    fig.add_bar(x=df.index, y=df[col], name="Group 2")
+st.plotly_chart(fig)
+
 # Create comparison charts
-pfglobals.create_comparison_chart(leftCol, left_values, original_where_clause, selected_list["db_column"], False)
-pfglobals.create_comparison_chart(rightCol, right_values, original_where_clause, selected_list["db_column"], False)
+# pfglobals.create_comparison_chart(leftCol, left_values, original_where_clause, selected_list["db_column"], False)
+# pfglobals.create_comparison_chart(rightCol, right_values, original_where_clause, selected_list["db_column"], False)
 #######################################################
 #             End of Side by Side Charts              #
 #######################################################
