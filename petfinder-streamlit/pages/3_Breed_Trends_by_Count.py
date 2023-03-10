@@ -93,6 +93,7 @@ all_select_boxes = [
 # now find all selected values to use to build queries
 left_values = []
 right_values = []
+
 for select_boxes in all_select_boxes:
     left_values.append({"db_column": select_boxes["db_column"], "db_col_type": select_boxes["db_col_type"], "select_box": select_boxes["left"]})
     right_values.append({"db_column": select_boxes["db_column"], "db_col_type": select_boxes["db_col_type"], "select_box": select_boxes["right"]})
@@ -111,7 +112,7 @@ if list(value for value in right_values if value['db_column'] == 'city' and valu
         if value['db_column'] == 'state':
             value['select_box'] = 'No value applied'
 
-df = pfglobals.get_comparison_dataframe(left_values, right_values, original_where_clause, "breed_primary", "los")
+df = pfglobals.get_comparison_dataframe(left_values, right_values, original_where_clause, "breed_primary", "count")
 fig = go.Figure()
 
 for col in ["left_group"]:
