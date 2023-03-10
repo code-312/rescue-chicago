@@ -125,7 +125,7 @@ if list(value for value in right_values if value['db_column'] == 'city' and valu
         if value['db_column'] == 'state':
             value['select_box'] = 'No value applied'
 
-df = pfglobals.get_comparison_dataframe(left_values, right_values, original_where_clause, "breed_primary", "los")
+df = pfglobals.get_comparison_dataframe(left_values, right_values, original_where_clause, selected_list["db_column"], "count")
 fig = go.Figure()
 
 for col in ["left_group"]:
