@@ -82,14 +82,7 @@ st.markdown("Use the filter widget in the sidebar to select a specific attribute
             "graphs illustrate how these characteristics impact average length of stay for dogs with the specified "
             "attributes.")
 
-group_labels = ['Group 1', 'Group 2']
-
 leftCol, rightCol = st.columns(2)
-
-with leftCol:
-    st.header(group_labels[0])
-with rightCol:
-    st.header(group_labels[1])
 
 # limit_query = ""
 original_where_clause = where_clause
@@ -126,7 +119,8 @@ if list(value for value in right_values if value['db_column'] == 'city' and valu
         if value['db_column'] == 'state':
             value['select_box'] = 'No value applied'
 
-df = pfglobals.get_comparison_dataframe(left_values, right_values, original_where_clause, "breed_primary", "los")
+
+df = pfglobals.get_comparison_dataframe(left_values, right_values, original_where_clause, selected_list['db_column'], "los")
 fig = go.Figure()
 
 for col in ["left_group"]:
