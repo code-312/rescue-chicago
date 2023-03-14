@@ -56,7 +56,7 @@ if len(pfglobals.breeds_list) > 0 and len(pfglobals.breeds_list) < len(pfglobals
     where_clause += ") "
 
 los_by_breed_query = """
-    SELECT breed_primary,AVG(los)::bigint as "%s",Count(*) as "%s" FROM "%s" %s GROUP BY breed_primary %s %s;
+    SELECT breed_primary,AVG(los)::bigint as "%s",Count(*) as "%s" FROM "%s" %s WHERE los <= 60 GROUP BY breed_primary HAVING Count(*) > 5 %s %s;
     """ % (pfglobals.LENGTH_OF_STAY_TEXT, pfglobals.COUNT_TEXT, pfglobals.DATABASE_TABLE, where_clause, pfglobals.los_sort, pfglobals.limit_query)
 
 if pfglobals.showQueries:
