@@ -82,28 +82,46 @@ st.markdown("Use the filter widget in the sidebar to select a specific attribute
             "graphs illustrate how these characteristics impact average length of stay for dogs with the specified "
             "attributes.")
 
+group_labels = ['Group 1', 'Group 2']
+
 leftCol, rightCol = st.columns(2)
 
-# limit_query = ""
-original_where_clause = where_clause
-
-# create the select boxes for all the comparison attributes
-all_select_boxes = [
-    pfglobals.create_select_boxes("gender", "Gender", leftCol, rightCol, False),
-    pfglobals.create_select_boxes("size", "Size", leftCol, rightCol, False),
-    pfglobals.create_select_boxes("coat", "Coat", leftCol, rightCol, False),
-    pfglobals.create_select_boxes("age", "Age", leftCol, rightCol, False),
-    pfglobals.create_select_boxes("good_with_children", "Good With Children", leftCol, rightCol, True),
-    pfglobals.create_select_boxes("good_with_dogs", "Good With Dogs", leftCol, rightCol, True),
-    pfglobals.create_select_boxes("good_with_cats", "Good With Cats", leftCol, rightCol, True),
-    pfglobals.create_select_boxes("breed_mixed", "Is Mixed Breed?", leftCol, rightCol, True),
-    pfglobals.create_select_boxes("attribute_special_needs", "Special Needs?", leftCol, rightCol, True),
-    pfglobals.create_select_boxes("attribute_shots_current", "Up To Date On Shots?", leftCol, rightCol, True)
-]
+with leftCol:
+    st.header(group_labels[0])
+with rightCol:
+    st.header(group_labels[1])
 
 # now find all selected values to use to build queries
 left_values = []
 right_values = []
+
+# limit_query = ""
+original_where_clause = where_clause
+
+# create objects with fields to later create them as select boxes
+select_boxes_to_be_created = [
+    {"label": "gender", "title": "Gender", "is_boolean": False}, 
+    {"label": "size", "title": "Size", "is_boolean": False},
+    {"label": "coat", "title": "Coat", "is_boolean": False},
+    {"label": "age", "title": "Age", "is_boolean": False},
+    {"label": "city", "title": "City", "is_boolean": False},
+    {"label": "state", "title": "State", "is_boolean": False},
+    {"label": "good_with_children", "title": "Good With Children", "is_boolean": True},
+    {"label": "good_with_dogs", "title": "Good With Dogs", "is_boolean": True},
+    {"label": "good_with_cats", "title": "Good With Cats", "is_boolean": True},
+    {"label": "breed_mixed", "title": "Is Mixed Breed?", "is_boolean": True},
+    {"label": "attribute_special_needs", "title": "Special Needs?", "is_boolean": True},
+    {"label": "attribute_shots_current", "title": "Up To Date On Shots?", "is_boolean": True},
+]
+
+# create the select boxes for all the comparison attributes
+all_select_boxes = []
+
+# loop through all select boxes to be created and only create them and append them to all_select_boxes 
+# if they do not match with the current selected_list['db_column'] ex: if "gender" is our current selected_list['db_column'] it will not be created & appended
+for select_box in select_boxes_to_be_created: 
+    if selected_list['db_column'] != select_box['label']:
+        all_select_boxes.append(pfglobals.create_select_boxes(select_box['label'], select_box['title'], leftCol, rightCol, select_box["is_boolean"]))
 
 for select_boxes in all_select_boxes:
     left_values.append({"db_column": select_boxes["db_column"], "db_col_type": select_boxes["db_col_type"], "select_box": select_boxes["left"]})
@@ -118,7 +136,6 @@ if list(value for value in right_values if value['db_column'] == 'city' and valu
     for value in right_values:
         if value['db_column'] == 'state':
             value['select_box'] = 'No value applied'
-
 
 df = pfglobals.get_comparison_dataframe(left_values, right_values, original_where_clause, selected_list['db_column'], "los")
 fig = go.Figure()
