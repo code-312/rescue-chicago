@@ -63,7 +63,6 @@ To learn more about the journeys of these rescued pups, we pulled data from the 
     PETFINDER_STREAMLIT_SHOW_QUERIES=False
     PETFINDER_STREAMLIT_CHART_TYPE=advanced
     DATABASE_URL=postgresql://username:password@localhost/app_name
-    LOCATION=Chicago, IL
     ```
     - Set PETFINDER_STREAMLIT_SHOW_QUERIES to False or True if you want to see queries shown on the frontend. False is the default.
     - Set PETFINDER_STREAMLIT_CHART_TYPE to simple, advanced or all, depending which type of chart you would like to see. advanced is the default.
@@ -87,15 +86,15 @@ To learn more about the journeys of these rescued pups, we pulled data from the 
 As an alternative to running Data Getter/Cleaner/Putter one at a time in the below directions, you can run the below command in your root directory to run all three at once in a CLI.
 Enter the specific location and amount of pages you'd like to fetch.
 ```bash
-python3 petfinder-data/data_runner.py
+python petfinder-data/data_runner.py
 ```
 
 ### Data Getter
 
 To pull down the first 100K results for dogs in and around Chicago, you can run:
 
-```python
-python3 petfinder-data/data_getter.py
+```bash
+python petfinder-data/data_getter.py
 ```
 
 max_pages: max_pages is the Maximum number of pages to query over. It's at the bottom of data_getter.py. Currently it's set to 10 pages so API Key usage doesn't max out on the first run of this file. Set max_pages=None to pull all data.
@@ -110,8 +109,8 @@ python requirements is needed.
 
 The script can be run by calling:
 
-```python
-python3 petfinder-data/data_cleaner.py
+```bash
+python petfinder-data/data_cleaner.py
 ```
 
 This will create a file called `city_state_animals_clean.pkl` in the

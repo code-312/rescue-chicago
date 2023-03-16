@@ -28,6 +28,7 @@ def get_organizations(location) -> pd.DataFrame:
     token = data_getter.get_token()
     # this is where we'll save our results
     DATA_DIR.mkdir(parents=True, exist_ok=True)
+    (DATA_DIR / "backup").mkdir(parents=True, exist_ok=True)
 
     url = "https://api.petfinder.com/v2/organizations"
 
@@ -119,7 +120,6 @@ def get_animals(location, pages, type="dog", status="adopted", organization=None
 
     # this is where we'll save our results
     DATA_DIR.mkdir(parents=True, exist_ok=True)
-    (DATA_DIR / "backup").mkdir(parents=True, exist_ok=True)
 
     url = "https://api.petfinder.com/v2/animals"
 
