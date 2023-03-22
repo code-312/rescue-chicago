@@ -56,7 +56,7 @@ for attribute_list in attribute_lists:
                 where_clause += ","
             where_clause += "'%s'" % attribute_value
             num_iterations += 1
-        where_clause += ") "
+        where_clause += ") AND los <= 60"
         break
 
 los_by_attribute_query = """
