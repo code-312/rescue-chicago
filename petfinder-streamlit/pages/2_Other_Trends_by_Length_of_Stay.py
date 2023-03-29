@@ -144,10 +144,6 @@ for col in ["left_group"]:
 for col in ["right_group"]:
     fig.add_bar(x=df.index, y=df[col], name="Group 2")
 st.plotly_chart(fig)
-
-# Create comparison charts
-# pfglobals.create_comparison_chart(leftCol, left_values, original_where_clause, selected_list["db_column"], True)
-# pfglobals.create_comparison_chart(rightCol, right_values, original_where_clause, selected_list["db_column"], True)
 #######################################################
 #             End of Side by Side Charts              #
 #######################################################
