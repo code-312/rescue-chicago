@@ -68,7 +68,6 @@ los_by_attribute_query = """
 if pfglobals.showQueries:
     st.markdown("#### Query")
     st.markdown(los_by_attribute_query)
-
 df = pfglobals.create_data_frame(pfglobals.run_query(los_by_attribute_query, pfglobals.conn_dict), selected_list["db_column"])
 pfglobals.show_bar_chart(df, pfglobals.LENGTH_OF_STAY_TEXT, pfglobals.COUNT_TEXT, True)
 
@@ -137,7 +136,7 @@ if list(value for value in right_values if value['db_column'] == 'city' and valu
         if value['db_column'] == 'state':
             value['select_box'] = 'No value applied'
 
-df = pfglobals.get_comparison_dataframe(left_values, right_values, original_where_clause, selected_list['db_column'], "count")
+df = pfglobals.get_comparison_dataframe(left_values, right_values, original_where_clause, selected_list['db_column'], "los")
 fig = go.Figure()
 
 for col in ["left_group"]:
