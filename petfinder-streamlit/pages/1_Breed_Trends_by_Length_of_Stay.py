@@ -55,9 +55,14 @@ if len(pfglobals.breeds_list) > 0 and len(pfglobals.breeds_list) < len(pfglobals
         num_iterations += 1
     where_clause += ") "
 
-los_by_breed_query = """
-    SELECT breed_primary,AVG(los)::bigint as "%s",Count(*) as "%s" FROM "%s" %s GROUP BY breed_primary %s %s;
-    """ % (pfglobals.LENGTH_OF_STAY_TEXT, pfglobals.COUNT_TEXT, pfglobals.DATABASE_TABLE, where_clause, pfglobals.los_sort, pfglobals.limit_query)
+if len(where_clause) > 0:
+    los_by_breed_query = """
+        SELECT breed_primary,AVG(los)::bigint as "%s",Count(*) as "%s" FROM "%s" %s GROUP BY breed_primary %s %s;
+        """ % (pfglobals.LENGTH_OF_STAY_TEXT, pfglobals.COUNT_TEXT, pfglobals.DATABASE_TABLE, where_clause, pfglobals.los_sort, pfglobals.limit_query)
+else:
+    los_by_breed_query = """
+        SELECT breed_primary,AVG(los)::bigint as "%s",Count(*) as "%s" FROM "%s" %s %s GROUP BY breed_primary %s %s %s;
+        """ % (pfglobals.LENGTH_OF_STAY_TEXT, pfglobals.COUNT_TEXT, pfglobals.DATABASE_TABLE, where_clause, pfglobals.max_los, pfglobals.min_animal_count, pfglobals.los_sort, pfglobals.limit_query)
 
 if pfglobals.showQueries:
     st.markdown("#### Query")

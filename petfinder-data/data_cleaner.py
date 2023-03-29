@@ -31,7 +31,6 @@ def calc_los(raw_published_col, raw_status_change_col) -> pd.Series:
 
     los_days = (status_change_dt - published_dt).dt.days
     los_days.name = "los"
-
     los_df = pd.concat([published_dt, status_change_dt, los_days], axis=1)
 
     return los_df
