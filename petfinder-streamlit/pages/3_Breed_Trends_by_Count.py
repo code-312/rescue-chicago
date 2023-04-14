@@ -8,6 +8,7 @@ import os
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import pfglobals
+import plotly.graph_objects as go
 
 st.markdown("# Chicago Rescue Dog Trends")
 st.markdown("## Breed Trends from Petfinder Data")
@@ -71,7 +72,19 @@ st.markdown("Use the filter widget in the sidebar to select specific breeds to v
             "the drop down lists below to compare on the graphs. These side-by-side graphs illustrate how these "
             "characteristics impact average length of stay for dogs of the selected breeds.")
 
+group_labels = ['Group 1', 'Group 2']
+
 leftCol, rightCol = st.columns(2)
+
+with leftCol:
+    st.header(group_labels[0])
+with rightCol:
+    st.header(group_labels[1])
+
+# now find all selected values to use to build queries
+left_values = []
+right_values = []
+
 # limit_query = ""
 original_where_clause = where_clause
 
@@ -89,16 +102,32 @@ all_select_boxes = [
     pfglobals.create_select_boxes("attribute_shots_current", "Up To Date On Shots?", leftCol, rightCol, True)
 ]
 
-# now find all selected values to use to build queries
-left_values = []
-right_values = []
 for select_boxes in all_select_boxes:
     left_values.append({"db_column": select_boxes["db_column"], "db_col_type": select_boxes["db_col_type"], "select_box": select_boxes["left"]})
     right_values.append({"db_column": select_boxes["db_column"], "db_col_type": select_boxes["db_col_type"], "select_box": select_boxes["right"]})
 
-# Create comparison charts
-pfglobals.create_comparison_chart(leftCol, left_values, original_where_clause, "breed_primary", False)
-pfglobals.create_comparison_chart(rightCol, right_values, original_where_clause, "breed_primary", False)
+for select_boxes in all_select_boxes:
+    left_values.append({"db_column": select_boxes["db_column"], "db_col_type": select_boxes["db_col_type"], "select_box": select_boxes["left"]})
+    right_values.append({"db_column": select_boxes["db_column"], "db_col_type": select_boxes["db_col_type"], "select_box": select_boxes["right"]})
+
+if list(value for value in left_values if value['db_column'] == 'city' and value['select_box'] != 'No value applied'):
+    for value in left_values:
+        if value['db_column'] == 'state':
+            value['select_box'] = 'No value applied'
+
+if list(value for value in right_values if value['db_column'] == 'city' and value['select_box'] != 'No value applied'):
+    for value in right_values:
+        if value['db_column'] == 'state':
+            value['select_box'] = 'No value applied'
+
+df = pfglobals.get_comparison_dataframe(left_values, right_values, original_where_clause, "breed_primary", "count")
+fig = go.Figure()
+
+for col in ["left_group"]:
+    fig.add_bar(x=df.index, y=df[col], name="Group 1")
+for col in ["right_group"]:
+    fig.add_bar(x=df.index, y=df[col], name="Group 2")
+st.plotly_chart(fig)
 #######################################################
 #             End of Side by Side Charts              #
 #######################################################
