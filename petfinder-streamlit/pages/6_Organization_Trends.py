@@ -1,0 +1,127 @@
+import streamlit as st
+from psycopg2.extras import RealDictCursor
+import plotly.express as px
+import plotly.graph_objects as go
+import pfglobals
+
+st.markdown("# Chicago Rescue Dog Trends")
+st.markdown("## Organization Trends from Petfinder Data")
+st.markdown("### How does an Organization affect average length of time from intake to adoption?")
+st.markdown("Use the filter widget in the "
+            "sidebar to select specific breeds to visualize, or to select a specific Organizations to see "
+            "visualized at one time.")
+
+
+#######################################################
+# Sidebar inputs for users to customize their results #
+#######################################################
+st.sidebar.markdown("## Page-Level Chart Settings")
+
+if "selected_orgs" not in st.session_state:
+    st.session_state['selected_orgs'] = []
+
+number_of_breeds_slider = pfglobals.place_orgs_in_sidepanel()
+pfglobals.place_los_sort_in_sidepanel(number_of_breeds_slider)
+
+#######################################################
+#               End sidebar inputs                    #
+#######################################################
+
+# Set up where clause for only the breeds the user has selected, if they selected any
+num_iterations = 0
+where_clause = ''
+if len(pfglobals.orgs_list) > 0 and len(pfglobals.orgs_list) < len(pfglobals.orgs_array):
+    where_clause = " WHERE organization_name IN ("
+    for org in pfglobals.orgs_list:
+        if num_iterations > 0:
+            where_clause += ","
+        where_clause += "'%s'" % org
+        num_iterations += 1
+    where_clause += ") "
+
+
+los_by_org_query = """
+    SELECT organization_name,AVG(los)::bigint as "%s",Count(*) as "%s" FROM "%s" %s GROUP BY organization_name %s %s;
+    """ % (pfglobals.LENGTH_OF_STAY_TEXT, pfglobals.COUNT_TEXT, pfglobals.DATABASE_TABLE, where_clause, pfglobals.los_sort, pfglobals.limit_query)
+
+if pfglobals.showQueries:
+    st.markdown("#### Query")
+    st.markdown(los_by_org_query)
+
+df = pfglobals.create_data_frame(pfglobals.run_query(los_by_org_query, pfglobals.conn_dict), "organization_name")
+pfglobals.show_bar_chart(df, pfglobals.LENGTH_OF_STAY_TEXT, pfglobals.COUNT_TEXT, True)
+
+#######################################################
+#                Side by Side Charts                  #
+#######################################################
+st.markdown("### How do different dog characteristics (gender, size, coat length, age, etc.) interact with Organizations to "
+            "affect length of stay?")
+st.markdown("Use the filter widget in the sidebar to select specific breeds to visualize, or to select a specific "
+            "number of random breeds to see visualized at one time. Then select values for other characteristics from "
+            "the drop down lists below to compare on the graphs. These side-by-side graphs illustrate how these "
+            "characteristics impact average length of stay for dogs of the selected breeds.")
+
+group_labels = ['Group 1', 'Group 2']
+
+leftCol, rightCol = st.columns(2)
+
+with leftCol:
+    st.header(group_labels[0])
+with rightCol:
+    st.header(group_labels[1])
+
+# now find all selected values to use to build queries
+left_values = []
+right_values = []
+
+# limit_query = ""
+original_where_clause = where_clause
+
+# create the select boxes for all the comparison attributes
+all_select_boxes = [
+    pfglobals.create_select_boxes("gender", "Gender", leftCol, rightCol, False),
+    pfglobals.create_select_boxes("size", "Size", leftCol, rightCol, False),
+    pfglobals.create_select_boxes("coat", "Coat", leftCol, rightCol, False),
+    pfglobals.create_select_boxes("age", "Age", leftCol, rightCol, False),
+    pfglobals.create_select_boxes("city", "City", leftCol, rightCol, False),
+    pfglobals.create_select_boxes("state", "State", leftCol, rightCol, False),
+    pfglobals.create_select_boxes("good_with_children", "Good With Children", leftCol, rightCol, True),
+    pfglobals.create_select_boxes("good_with_dogs", "Good With Dogs", leftCol, rightCol, True),
+    pfglobals.create_select_boxes("good_with_cats", "Good With Cats", leftCol, rightCol, True),
+    pfglobals.create_select_boxes("breed_mixed", "Is Mixed Breed?", leftCol, rightCol, True),
+    pfglobals.create_select_boxes("attribute_special_needs", "Special Needs?", leftCol, rightCol, True),
+    pfglobals.create_select_boxes("attribute_shots_current", "Up To Date On Shots?", leftCol, rightCol, True)
+]
+
+for select_boxes in all_select_boxes:
+    left_values.append({"db_column": select_boxes["db_column"], "db_col_type": select_boxes["db_col_type"], "select_box": select_boxes["left"]})
+    right_values.append({"db_column": select_boxes["db_column"], "db_col_type": select_boxes["db_col_type"], "select_box": select_boxes["right"]})
+
+if list(value for value in left_values if value['db_column'] == 'city' and value['select_box'] != 'No value applied'):
+    for value in left_values:
+        if value['db_column'] == 'state':
+            value['select_box'] = 'No value applied'
+
+if list(value for value in right_values if value['db_column'] == 'city' and value['select_box'] != 'No value applied'):
+    for value in right_values:
+        if value['db_column'] == 'state':
+            value['select_box'] = 'No value applied'
+
+df = pfglobals.get_comparison_dataframe(left_values, right_values, original_where_clause, "organization_name", "los")
+fig = go.Figure()
+
+for col in ["left_group"]:
+    fig.add_bar(x=df.index, y=df[col], name="Group 1")
+for col in ["right_group"]:
+    fig.add_bar(x=df.index, y=df[col], name="Group 2")
+st.plotly_chart(fig)
+
+# plotly_obj = px.bar(df, x=df.index, y="left_group")
+# st.plotly_chart(plotly_obj)
+
+# Create comparison charts
+# pfglobals.create_comparison_chart(leftCol, left_values, original_where_clause, "breed_primary", True)
+# pfglobals.create_comparison_chart(rightCol, right_values, original_where_clause, "breed_primary", True)
+#######################################################
+#             End of Side by Side Charts              #
+#######################################################
