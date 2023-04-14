@@ -7,7 +7,7 @@ print(DATA_FOLDER.resolve())
 
 MODEL_DATA_FOLDER = Path(__file__).parent / "data"
 
-df = pd.read_pickle(DATA_FOLDER / "chicago_animals_cleaned.pkl")
+df = pd.read_pickle(DATA_FOLDER / "chicago_il_animals_cleaned.pkl")
 
 df = df.drop(['id', 'organization_id', 'name'], axis=1)
 # df = df.drop(['id', 'organization_id', 'name', 'description','contact', '_links'], axis=1)
