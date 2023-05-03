@@ -28,9 +28,16 @@ st.sidebar.markdown("## Page-Level Chart Settings")
 
 if "selected_breeds" not in st.session_state:
     st.session_state['selected_breeds'] = []
+if "selected_locations" not in st.session_state:
+    st.session_state['selected_locations'] = ["Chicago"]
+print(st.session_state['selected_locations'], "MAIN PAGE st.session_state['selected_locations']")
 
 number_of_breeds_slider = pfglobals.place_breeds_in_sidepanel()
+pfglobals.location_sidepanel()
 pfglobals.place_los_sort_in_sidepanel(number_of_breeds_slider)
+st.sidebar.markdown("## Filter Settings")
+pfglobals.max_los_sidepanel()
+pfglobals.max_count_sidepanel()
 
 # st.write(st.session_state)
 
@@ -40,7 +47,7 @@ pfglobals.place_los_sort_in_sidepanel(number_of_breeds_slider)
 #)
 
 #######################################################
-#               End sidebar inputs                    #
+#                     Main Chart                      #
 #######################################################
 
 # Set up where clause for only the breeds the user has selected, if they selected any
@@ -55,21 +62,40 @@ if len(pfglobals.breeds_list) > 0 and len(pfglobals.breeds_list) < len(pfglobals
         num_iterations += 1
     where_clause += ") "
 
+location_iterations = 0
+location_clause = ''
+if len(pfglobals.location_list) > 0 and len(pfglobals.location_list) < len(pfglobals.location_array):
+    if len(pfglobals.breeds_list) > 0 and len(pfglobals.breeds_list) < len(pfglobals.breeds_array):
+        location_clause = " AND city IN ("
+    else:
+        location_clause = " WHERE city IN ("
+    for location in pfglobals.location_list:
+        if location_iterations > 0:
+            location_clause += ","
+        location_clause += "'%s'" % location
+        location_iterations += 1
+    location_clause += ") "
+
+print(location_clause, "MAIN PAGE LOCATION_CLAUSE")
+print(where_clause, "MAIN PAGE where_clause")
 if len(where_clause) > 0:
     los_by_breed_query = """
-        SELECT breed_primary,AVG(los)::bigint as "%s",Count(*) as "%s" FROM "%s" %s GROUP BY breed_primary %s %s;
-        """ % (pfglobals.LENGTH_OF_STAY_TEXT, pfglobals.COUNT_TEXT, pfglobals.DATABASE_TABLE, where_clause, pfglobals.los_sort, pfglobals.limit_query)
+        SELECT breed_primary,AVG(los)::bigint as "%s",Count(*) as "%s" FROM "%s" %s %s GROUP BY breed_primary %s %s;
+        """ % (pfglobals.LENGTH_OF_STAY_TEXT, pfglobals.COUNT_TEXT, pfglobals.DATABASE_TABLE, where_clause, location_clause, pfglobals.los_sort, pfglobals.limit_query)
 else:
     los_by_breed_query = """
-        SELECT breed_primary,AVG(los)::bigint as "%s",Count(*) as "%s" FROM "%s" %s %s GROUP BY breed_primary %s %s %s;
-        """ % (pfglobals.LENGTH_OF_STAY_TEXT, pfglobals.COUNT_TEXT, pfglobals.DATABASE_TABLE, where_clause, pfglobals.max_los, pfglobals.min_animal_count, pfglobals.los_sort, pfglobals.limit_query)
+        SELECT breed_primary,AVG(los)::bigint as "%s",Count(*) as "%s" FROM "%s" %s %s %s GROUP BY breed_primary %s %s %s;
+        """ % (pfglobals.LENGTH_OF_STAY_TEXT, pfglobals.COUNT_TEXT, pfglobals.DATABASE_TABLE, where_clause, location_clause, pfglobals.max_los, pfglobals.min_animal_count, pfglobals.los_sort, pfglobals.limit_query)
 
 if pfglobals.showQueries:
     st.markdown("#### Query")
     st.markdown(los_by_breed_query)
 
-df = pfglobals.create_data_frame(pfglobals.run_query(los_by_breed_query, pfglobals.conn_dict), "breed_primary")
-pfglobals.show_bar_chart(df, pfglobals.LENGTH_OF_STAY_TEXT, pfglobals.COUNT_TEXT, True)
+if pfglobals.run_query(los_by_breed_query, pfglobals.conn_dict) == []:
+    st.markdown("### No results were found with this criteria!  Please update your parameters to find results.")
+else:
+    df = pfglobals.create_data_frame(pfglobals.run_query(los_by_breed_query, pfglobals.conn_dict), "breed_primary")
+    pfglobals.show_bar_chart(df, pfglobals.LENGTH_OF_STAY_TEXT, pfglobals.COUNT_TEXT, True)
 
 #######################################################
 #                Side by Side Charts                  #
@@ -139,9 +165,6 @@ st.plotly_chart(fig)
 # plotly_obj = px.bar(df, x=df.index, y="left_group")
 # st.plotly_chart(plotly_obj)
 
-# Create comparison charts
-# pfglobals.create_comparison_chart(leftCol, left_values, original_where_clause, "breed_primary", True)
-# pfglobals.create_comparison_chart(rightCol, right_values, original_where_clause, "breed_primary", True)
 #######################################################
 #             End of Side by Side Charts              #
 #######################################################

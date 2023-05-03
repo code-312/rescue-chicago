@@ -79,6 +79,7 @@ original_where_clause = where_clause
 
 # create the select boxes for all the comparison attributes
 all_select_boxes = [
+    pfglobals.create_select_boxes("organization_name", "Organization", leftCol, rightCol, False),
     pfglobals.create_select_boxes("gender", "Gender", leftCol, rightCol, False),
     pfglobals.create_select_boxes("size", "Size", leftCol, rightCol, False),
     pfglobals.create_select_boxes("coat", "Coat", leftCol, rightCol, False),
@@ -118,10 +119,6 @@ st.plotly_chart(fig)
 
 # plotly_obj = px.bar(df, x=df.index, y="left_group")
 # st.plotly_chart(plotly_obj)
-
-# Create comparison charts
-# pfglobals.create_comparison_chart(leftCol, left_values, original_where_clause, "breed_primary", True)
-# pfglobals.create_comparison_chart(rightCol, right_values, original_where_clause, "breed_primary", True)
 #######################################################
 #             End of Side by Side Charts              #
 #######################################################

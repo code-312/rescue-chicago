@@ -219,42 +219,20 @@ def create_comparison_chart(column, values, og_where_clause, main_db_col, is_los
 def place_breeds_in_sidepanel():
     global breeds_list
     global breeds_array
-    global max_los
-    global min_animal_count
 
     list_breeds_query = """
         SELECT DISTINCT(breed_primary) FROM "%s" ORDER BY breed_primary ASC;
-        """ % DATABASE_TABLE
-    max_los_query = """
-        SELECT MAX(los) FROM "%s";
         """ % DATABASE_TABLE
     if showQueries:
         st.markdown(list_breeds_query)
 
     breeds_results = run_query(list_breeds_query, conn_no_dict)
-    max_bound_los = run_query(max_los_query, conn_no_dict)
 
     breeds_array = []
     breeds_array_default = []
     for breed in breeds_results:
         breeds_array.append(breed[0])
     total_num_breeds = len(breeds_array)
-    max_los_slider_value = st.sidebar.slider(
-        'Set Maximum lengh of stay to filter data-set',
-        1, int(max_bound_los[0][0]), (60)
-    )
-    max_los = """
-    WHERE los <= %d
-    """ % (max_los_slider_value)
-
-    min_animal_slider_count = st.sidebar.slider(
-        'Set Minumum # of animals in Average to filter data-set',
-        1, 7, (1)
-    )
-
-    min_animal_count = """
-    HAVING Count(*) > %d
-    """ % (min_animal_slider_count)
 
     breeds_list = st.sidebar.multiselect(
         'Choose the breeds you want to see (will ignore the number of breeds set below if this field is set)',
@@ -263,24 +241,64 @@ def place_breeds_in_sidepanel():
     if len(breeds_list) <= 0:
         number_of_breeds_slider = st.sidebar.slider(
             'How many breeds would you like to see?',
-            1, 100, (20)
+            1, 100, (15)
         )
     else:
         number_of_breeds_slider = 0
 
     return number_of_breeds_slider
 
-# def max_los_ctrlr_in_sidepanel():
-#     global maxLos
-#     global breeds_array
-#     list_breeds_query = """
-#         SELECT DISTINCT(breed_primary) FROM "%s" ORDER BY breed_primary ASC;
-#         """ % DATABASE_TABLE
-#     number_of_breeds_slider = st.sidebar.slider(
-#         'Set Maximum Los date to sanitize data',
-#         1, 300, (60)
-#     )
-#     pass
+def location_sidepanel():
+    global location_array
+    global location_list
+
+    list_loc_query = """
+        SELECT DISTINCT(city) FROM "%s" ORDER BY city ASC;
+        """ % DATABASE_TABLE
+    if showQueries:
+        st.markdown(list_loc_query)
+
+    location_results = run_query(list_loc_query, conn_no_dict)
+
+    location_array = []
+    for location in location_results:
+        location_array.append(location[0])
+
+    location_list = st.sidebar.multiselect(
+        'City', location_array, st.session_state.selected_locations, key="selected_locations"
+    )
+    print(location_array, location_list, "PFGLOBALS")
+
+def max_los_sidepanel():
+    global max_los
+
+    max_los_query = """
+        SELECT MAX(los) FROM "%s";
+        """ % DATABASE_TABLE
+
+    max_bound_los = run_query(max_los_query, conn_no_dict)
+
+    max_los_slider_value = st.sidebar.slider(
+        'Set Maximum Length of Stay to filter outliers. (Default is filtering out a length of stay 60 days or greater)',
+        1, 365, (60)
+    )
+    print(st.session_state['selected_locations'])
+    if st.session_state['selected_locations'] == []:
+        max_los = """ WHERE los <= %d """ % (max_los_slider_value)
+    else:
+        max_los = """ AND los <= %d """ % (max_los_slider_value)
+
+def max_count_sidepanel():
+    global min_animal_count
+
+    min_animal_slider_count = st.sidebar.slider(
+        'Filter out breeds with a small count.',
+        1, 7, (7)
+    )
+
+    min_animal_count = """
+    HAVING Count(*) > %d
+    """ % (min_animal_slider_count)
 
 def place_orgs_in_sidepanel():
     global orgs_list
@@ -296,10 +314,8 @@ def place_orgs_in_sidepanel():
     orgs_results = run_query(list_orgs_query, conn_no_dict)
 
     orgs_array = []
-    orgs_array_default = []
     for breed in orgs_results:
         orgs_array.append(breed[0])
-    total_num_orgs = len(orgs_array)
 
     orgs_list = st.sidebar.multiselect(
         'Choose the orgs you want to see (will ignore the number of orgs set below if this field is set)',
