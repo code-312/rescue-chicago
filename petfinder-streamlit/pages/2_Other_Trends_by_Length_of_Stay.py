@@ -58,7 +58,7 @@ for attribute_list in attribute_lists:
                 where_clause += ","
             where_clause += "'%s'" % attribute_value
             num_iterations += 1
-        where_clause += ") AND los <= 60"
+        where_clause += ") "
         break
 
 los_by_attribute_query = """
@@ -99,7 +99,7 @@ original_where_clause = where_clause
 
 # create objects with fields to later create them as select boxes
 select_boxes_to_be_created = [
-    {"label": "gender", "title": "Gender", "is_boolean": False}, 
+    {"label": "gender", "title": "Gender", "is_boolean": False},
     {"label": "size", "title": "Size", "is_boolean": False},
     {"label": "coat", "title": "Coat", "is_boolean": False},
     {"label": "age", "title": "Age", "is_boolean": False},
@@ -116,9 +116,9 @@ select_boxes_to_be_created = [
 # create the select boxes for all the comparison attributes
 all_select_boxes = []
 
-# loop through all select boxes to be created and only create them and append them to all_select_boxes 
+# loop through all select boxes to be created and only create them and append them to all_select_boxes
 # if they do not match with the current selected_list['db_column'] ex: if "gender" is our current selected_list['db_column'] it will not be created & appended
-for select_box in select_boxes_to_be_created: 
+for select_box in select_boxes_to_be_created:
     if selected_list['db_column'] != select_box['label']:
         all_select_boxes.append(pfglobals.create_select_boxes(select_box['label'], select_box['title'], leftCol, rightCol, select_box["is_boolean"]))
 

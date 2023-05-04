@@ -30,7 +30,6 @@ if "selected_breeds" not in st.session_state:
     st.session_state['selected_breeds'] = []
 if "selected_locations" not in st.session_state:
     st.session_state['selected_locations'] = ["Chicago"]
-print(st.session_state['selected_locations'], "MAIN PAGE st.session_state['selected_locations']")
 
 number_of_breeds_slider = pfglobals.place_breeds_in_sidepanel()
 pfglobals.location_sidepanel()
@@ -39,12 +38,7 @@ st.sidebar.markdown("## Filter Settings")
 pfglobals.max_los_sidepanel()
 pfglobals.max_count_sidepanel()
 
-# st.write(st.session_state)
-
-#los_sort_selectbox = st.sidebar.selectbox(
-#    'Sort by number of results',
-#   ('DESC', 'ASC', 'NONE')
-#)
+st.sidebar.markdown("##### ")
 
 #######################################################
 #                     Main Chart                      #
@@ -62,9 +56,10 @@ if len(pfglobals.breeds_list) > 0 and len(pfglobals.breeds_list) < len(pfglobals
         num_iterations += 1
     where_clause += ") "
 
+# Set up where clause for only the locations the user has selected, default is chicago
 location_iterations = 0
 location_clause = ''
-if len(pfglobals.location_list) > 0 and len(pfglobals.location_list) < len(pfglobals.location_array):
+if len(pfglobals.location_list) > 0:
     if len(pfglobals.breeds_list) > 0 and len(pfglobals.breeds_list) < len(pfglobals.breeds_array):
         location_clause = " AND city IN ("
     else:
@@ -76,8 +71,6 @@ if len(pfglobals.location_list) > 0 and len(pfglobals.location_list) < len(pfglo
         location_iterations += 1
     location_clause += ") "
 
-print(location_clause, "MAIN PAGE LOCATION_CLAUSE")
-print(where_clause, "MAIN PAGE where_clause")
 if len(where_clause) > 0:
     los_by_breed_query = """
         SELECT breed_primary,AVG(los)::bigint as "%s",Count(*) as "%s" FROM "%s" %s %s GROUP BY breed_primary %s %s;
@@ -92,7 +85,8 @@ if pfglobals.showQueries:
     st.markdown(los_by_breed_query)
 
 if pfglobals.run_query(los_by_breed_query, pfglobals.conn_dict) == []:
-    st.markdown("### No results were found with this criteria!  Please update your parameters to find results.")
+    results = '<p style="font-family:Courier; color:Red; font-size: 20px;">No results were found with this criteria! Please update your parameters to find results.</p>'
+    st.markdown(results, unsafe_allow_html=True)
 else:
     df = pfglobals.create_data_frame(pfglobals.run_query(los_by_breed_query, pfglobals.conn_dict), "breed_primary")
     pfglobals.show_bar_chart(df, pfglobals.LENGTH_OF_STAY_TEXT, pfglobals.COUNT_TEXT, True)

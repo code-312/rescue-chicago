@@ -7,7 +7,7 @@ import plotly.express as px
 from config import HEROKU_URL, SHOW_QUERIES, CHART_TYPE, LOCAL_DATABASE_URL
 
 
-showQueries = SHOW_QUERIES == "True"
+showQueries = SHOW_QUERIES == "False"
 showChartType = CHART_TYPE
 DATABASE_URL = HEROKU_URL
 
@@ -265,9 +265,8 @@ def location_sidepanel():
         location_array.append(location[0])
 
     location_list = st.sidebar.multiselect(
-        'City', location_array, st.session_state.selected_locations, key="selected_locations"
+        'City (Clear selections to show all cities.)', location_array, st.session_state.selected_locations, key="selected_locations"
     )
-    print(location_array, location_list, "PFGLOBALS")
 
 def max_los_sidepanel():
     global max_los
@@ -282,7 +281,6 @@ def max_los_sidepanel():
         'Set Maximum Length of Stay to filter outliers. (Default is filtering out a length of stay 60 days or greater)',
         1, 365, (60)
     )
-    print(st.session_state['selected_locations'])
     if st.session_state['selected_locations'] == []:
         max_los = """ WHERE los <= %d """ % (max_los_slider_value)
     else:
