@@ -52,7 +52,8 @@ conn_dict = init_connection(True)
 
 def create_data_frame(data, index_column):
     df = pd.DataFrame().from_dict(data)
-    df.set_index(index_column, inplace=True)
+    if index_column:
+        df.set_index(index_column, inplace=True)
     return df
 
 
