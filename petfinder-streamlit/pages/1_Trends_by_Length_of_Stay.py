@@ -53,7 +53,7 @@ with breed_trends_tab:
         num_iterations = 0
         where_clause = ''
         if len(pfglobals.breeds_list) > 0 and len(pfglobals.breeds_list) < len(pfglobals.breeds_array):
-            where_clause = " WHERE breed_primary IN ("
+            where_clause = " AND breed_primary IN ("
             for breed in pfglobals.breeds_list:
                 if num_iterations > 0:
                     where_clause += ","
@@ -65,10 +65,10 @@ with breed_trends_tab:
         location_iterations = 0
         location_clause = ''
         if len(pfglobals.location_list) > 0:
-            if len(pfglobals.breeds_list) > 0 and len(pfglobals.breeds_list) < len(pfglobals.breeds_array):
-                location_clause = " AND city IN ("
-            else:
-                location_clause = " WHERE city IN ("
+            # if len(pfglobals.breeds_list) > 0 and len(pfglobals.breeds_list) < len(pfglobals.breeds_array):
+            location_clause = " AND city IN ("
+            # else:
+            #     location_clause = " WHERE city IN ("
             for location in pfglobals.location_list:
                 if location_iterations > 0:
                     location_clause += ","
@@ -78,12 +78,13 @@ with breed_trends_tab:
 
         if len(where_clause) > 0:
             los_by_breed_query = """
-                SELECT breed_primary,AVG(los)::bigint as "%s",Count(*) as "%s" FROM "%s" %s %s GROUP BY breed_primary %s %s;
-                """ % (pfglobals.LENGTH_OF_STAY_TEXT, pfglobals.COUNT_TEXT, pfglobals.DATABASE_TABLE, where_clause, location_clause, pfglobals.los_sort, pfglobals.limit_query)
+                SELECT breed_primary,AVG(los)::bigint as "%s",Count(*) as "%s" FROM "%s" %s %s %s GROUP BY breed_primary %s %s %s;
+                """ % (pfglobals.LENGTH_OF_STAY_TEXT, pfglobals.COUNT_TEXT, pfglobals.DATABASE_TABLE, pfglobals.max_los, where_clause, location_clause,  pfglobals.min_animal_count, pfglobals.los_sort, pfglobals.limit_query)
         else:
             los_by_breed_query = """
-                SELECT breed_primary,AVG(los)::bigint as "%s",Count(*) as "%s" FROM "%s" %s %s %s GROUP BY breed_primary %s %s %s;
-                """ % (pfglobals.LENGTH_OF_STAY_TEXT, pfglobals.COUNT_TEXT, pfglobals.DATABASE_TABLE, where_clause, location_clause, pfglobals.max_los, pfglobals.min_animal_count, pfglobals.los_sort, pfglobals.limit_query)
+                SELECT breed_primary,AVG(los)::bigint as "%s",Count(*) as "%s" FROM "%s" %s %s GROUP BY breed_primary %s %s %s;
+                """ % (pfglobals.LENGTH_OF_STAY_TEXT, pfglobals.COUNT_TEXT, pfglobals.DATABASE_TABLE, pfglobals.max_los, location_clause, pfglobals.min_animal_count, pfglobals.los_sort, pfglobals.limit_query)
+        # print(los_by_breed_query)
 
         if pfglobals.showQueries:
             st.markdown("#### Query")
@@ -191,22 +192,32 @@ with other_trends_tab:
     selected_list = []
     for attribute_list in attribute_lists:
         num_iterations = 0
-        where_clause = ''
+        attr_where_clause = ''
         if len(attribute_list["selectbox"]) > 0:
             selected_list = attribute_list
-            where_clause = " WHERE %s IN (" % attribute_list["db_column"]
+            attr_where_clause = " AND %s IN (" % attribute_list["db_column"]
             for attribute_value in attribute_list["value_list"]:
                 if num_iterations > 0:
-                    where_clause += ","
-                where_clause += "'%s'" % attribute_value
+                    attr_where_clause += ","
+                attr_where_clause += "'%s'" % attribute_value
                 num_iterations += 1
-            where_clause += ") "
+            attr_where_clause += ") "
             break
 
-    los_by_attribute_query = """
-        SELECT %s,AVG(los)::bigint as "%s",Count(*) as "%s" FROM "%s" %s GROUP BY %s %s %s;
-        """ % (selected_list["db_column"], pfglobals.LENGTH_OF_STAY_TEXT, pfglobals.COUNT_TEXT, pfglobals.DATABASE_TABLE, where_clause, selected_list["db_column"], pfglobals.los_sort, pfglobals.limit_query)
+    attr_location_iterations = 0
+    attr_location_clause = ''
+    if len(pfglobals.location_list) > 0:
+        attr_location_clause = " AND city IN ("
+        for attr_location in pfglobals.location_list:
+            if attr_location_iterations > 0:
+                attr_location_clause += ","
+            attr_location_clause += "'%s'" % attr_location
+            attr_location_iterations += 1
+        attr_location_clause += ") "
 
+    los_by_attribute_query = """
+        SELECT %s,AVG(los)::bigint as "%s",Count(*) as "%s" FROM "%s" %s %s %s GROUP BY %s %s %s %s;
+        """ % (selected_list["db_column"], pfglobals.LENGTH_OF_STAY_TEXT, pfglobals.COUNT_TEXT, pfglobals.DATABASE_TABLE, pfglobals.max_los, attr_where_clause, attr_location_clause, selected_list["db_column"], pfglobals.min_animal_count, pfglobals.los_sort, pfglobals.limit_query)
     if pfglobals.showQueries:
         st.markdown("#### Query")
         st.markdown(los_by_attribute_query)

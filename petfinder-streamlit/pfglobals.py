@@ -97,10 +97,10 @@ def create_select_boxes(db_column, text, col1, col2, is_boolean, trend):
 
 
 def construct_where_clause(values, og_where_clause):
-    if not og_where_clause:
-        comparison_where_clause = WHERE_START
-    else:
-        comparison_where_clause = og_where_clause + " AND "
+    # if not og_where_clause:
+    #     comparison_where_clause = WHERE_START
+    # else:
+    comparison_where_clause = og_where_clause + " AND "
     i = 0
     while i < len(values):
         if i > 0 and values[i]["select_box"] != DEFAULT_DROPDOWN_TEXT and (comparison_where_clause != WHERE_START) and not (comparison_where_clause.endswith(AND_START)):
@@ -143,8 +143,8 @@ def construct_comparison_query(left_values, right_values, og_where_clause, group
 
     comparison_query = f"""
     WITH a AS
-    (SELECT {group_by_col}, {target_query} AS left_group FROM {DATABASE_TABLE} {left_where_clause} GROUP BY {group_by_col}),
-    b AS (SELECT {group_by_col}, {target_query} AS right_group FROM {DATABASE_TABLE} {right_where_clause} GROUP BY {group_by_col})
+    (SELECT {group_by_col}, {target_query} AS left_group FROM {DATABASE_TABLE} {max_los} {left_where_clause} GROUP BY {group_by_col} {min_animal_count} ),
+    b AS (SELECT {group_by_col}, {target_query} AS right_group FROM {DATABASE_TABLE} {max_los} {right_where_clause} GROUP BY {group_by_col} {min_animal_count} )
     SELECT a.{group_by_col}, left_group, right_group, (left_group+right_group)/2 as av FROM (a INNER JOIN b ON a.{group_by_col} = b.{group_by_col})
     {mod_los_sort}
     {limit_query}
@@ -281,10 +281,10 @@ def max_los_sidepanel():
         'Set Maximum Length of Stay to filter outliers. (Default is filtering out a length of stay 60 days or greater)',
         1, 365, (60)
     )
-    if st.session_state['selected_locations'] == []:
-        max_los = """ WHERE los <= %d """ % (max_los_slider_value)
-    else:
-        max_los = """ AND los <= %d """ % (max_los_slider_value)
+    # if st.session_state['selected_locations'] == []:
+    max_los = """ WHERE los <= %d """ % (max_los_slider_value)
+    # else:
+    #     max_los = """ AND los <= %d """ % (max_los_slider_value)
 
 def max_count_sidepanel():
     global min_animal_count
