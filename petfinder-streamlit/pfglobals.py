@@ -291,7 +291,7 @@ def max_count_sidepanel():
 
     min_animal_slider_count = st.sidebar.slider(
         'Filter out breeds with a small data count.',
-        1, 7, (7)
+        1, 7, (1)
     )
 
     min_animal_count = """

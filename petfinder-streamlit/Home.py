@@ -23,5 +23,4 @@ st.write(acknowledgements_text)
 
 st.markdown("## Visualization Pages")
 st.markdown("* <a href=\"/Trends_by_Length_of_Stay\" target=\"_self\">Trends by Length of Stay</a>", unsafe_allow_html=True)
-st.markdown("* <a href=\"/Breed_Trends_by_Count\" target=\"_self\">Breed Trends by Count</a>", unsafe_allow_html=True)
-st.markdown("* <a href=\"/Other_Trends_by_Count\" target=\"_self\">Other Trends by Count</a>", unsafe_allow_html=True)
+st.markdown("* <a href=\"/Trends_by_Count\" target=\"_self\">Trends by Count</a>", unsafe_allow_html=True)
