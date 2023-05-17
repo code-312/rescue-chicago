@@ -160,7 +160,7 @@ with breed_trends_tab:
 #             Other Trends by Count Tab               #
 #######################################################
 with other_trends_tab:
-    st.markdown("# Chicago Rescue Dog Trends")
+    st.markdown("# Rescue Dog Trends")
     st.markdown("## Other Trends from Petfinder Data")
     st.markdown("### How do different dog characteristics (gender, size, coat length, age) affect the number of dogs "
                 "waiting to be adopted?")

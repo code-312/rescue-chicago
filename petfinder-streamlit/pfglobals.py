@@ -278,8 +278,8 @@ def max_los_sidepanel():
     max_bound_los = run_query(max_los_query, conn_no_dict)
 
     max_los_slider_value = st.sidebar.slider(
-        'Set Maximum Length of Stay to filter outliers. (Default is filtering out a length of stay 60 days or greater)',
-        1, 365, (60)
+        'Set Maximum Length of Stay to filter outliers. (Default is filtering out a length of stay 365 days or greater)',
+        1, 365, (365)
     )
     # if st.session_state['selected_locations'] == []:
     max_los = """ WHERE los <= %d """ % (max_los_slider_value)
