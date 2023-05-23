@@ -315,14 +315,14 @@ def place_orgs_in_sidepanel():
     for breed in orgs_results:
         orgs_array.append(breed[0])
 
-    orgs_list = st.sidebar.multiselect(
+    orgs_list = st.multiselect(
         'Choose the orgs you want to see (will ignore the number of orgs set below if this field is set)',
         orgs_array, st.session_state.selected_orgs, key="selected_orgs"
     )
     if len(orgs_list) <= 0:
-        number_of_orgs_slider = st.sidebar.slider(
+        number_of_orgs_slider = st.slider(
             'How many orgs would you like to see?',
-            1, 100, (15)
+            1, 100, (10)
         )
     else:
         number_of_orgs_slider = 0
