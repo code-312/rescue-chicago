@@ -149,7 +149,7 @@ with org_trends_tab:
 with org_scatterplot_tab:
     st.markdown("# Rescue Dog Trends")
     st.markdown("## Organization Trends from Petfinder Data")
-    st.markdown("#### Details from a specific Organization displayed via Altair Scatter Plot chart.")
+    st.markdown("##### Details from a specific Organization displayed via Altair Scatter Plot chart.")
     st.caption("Note: No sidebar settings apply to this chart.")
 
     list_orgs_query = """
@@ -172,12 +172,12 @@ with org_scatterplot_tab:
         """ % (pfglobals.DATABASE_TABLE, selected_org_query)
     # print(los_by_org_altair_query)
     altair_df = pfglobals.create_data_frame(pfglobals.run_query(los_by_org_altair_query, pfglobals.conn_dict), "organization_name")
-    # print(altair_df)
-    org_chart = alt.Chart(altair_df).mark_circle(size=60).encode(
+    selected_org_city = altair_df['city'][0]
+    selected_org_state = altair_df['state'][0]
+    org_chart = alt.Chart(altair_df, title=f'{selected_org} in {selected_org_city}, {selected_org_state}').mark_circle(size=60).encode(
         x='published_at',
         y='los',
         color='gender',
         tooltip=['name', 'los', 'breed_primary', 'age', 'size']
     ).interactive()
-
     st.altair_chart(org_chart, use_container_width=True)
