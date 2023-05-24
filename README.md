@@ -3,7 +3,7 @@
 
 <div align="center"><img src="https://user-images.githubusercontent.com/89172742/193910009-1faf3fe1-d991-4ccf-afde-fa4d448f27aa.png" width="552" height="278" /></div>
 
-<h5 align="center">  By:  <a href="https://github.com/kaylarobinson077">Kayla Robinson</a>, <a href="https://github.com/TheeChris">Chris Lynch</a>, <a href="https://github.com/ecooperman">Evan Cooperman</a>, Joseph Adorno, Cara Karter, <a href="https://github.com/Jared-Kunhart">Jared Kunhart</a>, <a href="https://github.com/VegetablePC">Jon Hall</a>, <a href="https://github.com/JJD129">Jhen Dimaano</a>, <a href="https://github.com/Sailia">Syema Ailia</a> - <a href="https://codeforchicago-rescuechi.herokuapp.com/"><i>Live site</i></h5>
+<h5 align="center"><i>Live site</i></h5>
 
 ### Table of Contents
 - [Main purpose](#main)
@@ -180,7 +180,9 @@ Compare Organizations and their length of stay.
 Expand to other pets.
 
 ## Conclusion and Contributions
-<h5>Project made during Women Who Code Hackathon for Social Good 2022.</h5>
+Contributions:  <a href="https://github.com/kaylarobinson077">Kayla Robinson</a>, <a href="https://github.com/TheeChris">Chris Lynch</a>, <a href="https://github.com/ecooperman">Evan Cooperman</a>, Joseph Adorno, Cara Karter, <a href="https://github.com/Jared-Kunhart">Jared Kunhart</a>, <a href="https://github.com/VegetablePC">Jon Hall</a>, <a href="https://github.com/JJD129">Jhen Dimaano</a>, <a href="https://github.com/Sailia">Syema Ailia</a>, <a href="https://github.com/JayDrojas">Damian</a>, <a href="https://github.com/Fiasco071">Steve Choi</a>, <a href="https://github.com/avigutta">Avi Gutta</a>
+
+<h5>Project originally made during Women Who Code Hackathon for Social Good 2022.</h5>
 
 ### [Rescue Chicago](https://rescuechi.org/)
 <img src="https://user-images.githubusercontent.com/89172742/193914404-16b5c6b5-bdf0-46e1-9e52-78c8b3cdd381.png" width="594" height="303" />

@@ -7,7 +7,7 @@ import plotly.express as px
 from config import HEROKU_URL, SHOW_QUERIES, CHART_TYPE, LOCAL_DATABASE_URL
 
 
-showQueries = SHOW_QUERIES == "True"
+showQueries = SHOW_QUERIES == "False"
 showChartType = CHART_TYPE
 DATABASE_URL = HEROKU_URL
 
@@ -71,7 +71,7 @@ def create_array_of_db_values(db_column):
 
 # Create select boxes for the left and right side of charts
 # isBoolean determines whether the DB column is a boolean, and thus whether we need to remove quotes
-def create_select_boxes(db_column, text, col1, col2, is_boolean):
+def create_select_boxes(db_column, text, col1, col2, is_boolean, trend):
     db_col_type = STRING_DB_TYPE
     if is_boolean:
         # if we execute a query to find all True/False/None then the app takes way too long to load
@@ -83,24 +83,24 @@ def create_select_boxes(db_column, text, col1, col2, is_boolean):
         select_box_left = st.selectbox(
             text,
             values,
-            key=db_column + "_left"
+            key=db_column + "_left_" + trend
         )
 
     with col2:
         select_box_right = st.selectbox(
             text,
             values,
-            key=db_column + "_right"
+            key=db_column + "_right_" + trend
         )
 
     return {"db_column": db_column, "db_col_type": db_col_type, "left": select_box_left, "right": select_box_right}
 
 
 def construct_where_clause(values, og_where_clause):
-    if not og_where_clause:
-        comparison_where_clause = WHERE_START
-    else:
-        comparison_where_clause = og_where_clause + " AND "
+    # if not og_where_clause:
+    #     comparison_where_clause = WHERE_START
+    # else:
+    comparison_where_clause = og_where_clause + " AND "
     i = 0
     while i < len(values):
         if i > 0 and values[i]["select_box"] != DEFAULT_DROPDOWN_TEXT and (comparison_where_clause != WHERE_START) and not (comparison_where_clause.endswith(AND_START)):
@@ -143,8 +143,8 @@ def construct_comparison_query(left_values, right_values, og_where_clause, group
 
     comparison_query = f"""
     WITH a AS
-    (SELECT {group_by_col}, {target_query} AS left_group FROM {DATABASE_TABLE} {left_where_clause} GROUP BY {group_by_col}),
-    b AS (SELECT {group_by_col}, {target_query} AS right_group FROM {DATABASE_TABLE} {right_where_clause} GROUP BY {group_by_col})
+    (SELECT {group_by_col}, {target_query} AS left_group FROM {DATABASE_TABLE} {max_los} {left_where_clause} GROUP BY {group_by_col} {min_animal_count} ),
+    b AS (SELECT {group_by_col}, {target_query} AS right_group FROM {DATABASE_TABLE} {max_los} {right_where_clause} GROUP BY {group_by_col} {min_animal_count} )
     SELECT a.{group_by_col}, left_group, right_group, (left_group+right_group)/2 as av FROM (a INNER JOIN b ON a.{group_by_col} = b.{group_by_col})
     {mod_los_sort}
     {limit_query}
@@ -219,36 +219,78 @@ def create_comparison_chart(column, values, og_where_clause, main_db_col, is_los
 def place_breeds_in_sidepanel():
     global breeds_list
     global breeds_array
-    global max_los
-    global min_animal_count
 
     list_breeds_query = """
         SELECT DISTINCT(breed_primary) FROM "%s" ORDER BY breed_primary ASC;
         """ % DATABASE_TABLE
-    max_los_query = """
-        SELECT MAX(los) FROM "%s";
-        """ % DATABASE_TABLE    
     if showQueries:
         st.markdown(list_breeds_query)
 
     breeds_results = run_query(list_breeds_query, conn_no_dict)
-    max_bound_los = run_query(max_los_query, conn_no_dict)
 
     breeds_array = []
     breeds_array_default = []
     for breed in breeds_results:
         breeds_array.append(breed[0])
     total_num_breeds = len(breeds_array)
-    max_los_slider_value = st.sidebar.slider(
-        'Set Maximum lengh of stay to filter data-set',
-        1, int(max_bound_los[0][0]), (60)
+
+    breeds_list = st.multiselect(
+        'Choose specific breeds you want to see.',
+        breeds_array, st.session_state.selected_breeds, key="selected_breeds"
     )
-    max_los = """
-    WHERE los <= %d
-    """ % (max_los_slider_value)
+    if len(breeds_list) <= 0:
+        number_of_breeds_slider = st.slider(
+            'How many breeds would you like to see?',
+            1, 100, (15)
+        )
+    else:
+        number_of_breeds_slider = 0
+
+    return number_of_breeds_slider
+
+def location_sidepanel():
+    global location_array
+    global location_list
+
+    list_loc_query = """
+        SELECT DISTINCT(city) FROM "%s" ORDER BY city ASC;
+        """ % DATABASE_TABLE
+    if showQueries:
+        st.markdown(list_loc_query)
+
+    location_results = run_query(list_loc_query, conn_no_dict)
+
+    location_array = []
+    for location in location_results:
+        location_array.append(location[0])
+
+    location_list = st.sidebar.multiselect(
+        'City (clear selections to show all location data.)', location_array, st.session_state.selected_locations, key="selected_locations"
+    )
+
+def max_los_sidepanel():
+    global max_los
+
+    max_los_query = """
+        SELECT MAX(los) FROM "%s";
+        """ % DATABASE_TABLE
+
+    max_bound_los = run_query(max_los_query, conn_no_dict)
+
+    max_los_slider_value = st.sidebar.slider(
+        'Set Maximum Length of Stay to filter outliers. (Default is filtering out a length of stay 365 days or greater)',
+        1, 365, (365)
+    )
+    # if st.session_state['selected_locations'] == []:
+    max_los = """ WHERE los <= %d """ % (max_los_slider_value)
+    # else:
+    #     max_los = """ AND los <= %d """ % (max_los_slider_value)
+
+def max_count_sidepanel():
+    global min_animal_count
 
     min_animal_slider_count = st.sidebar.slider(
-        'Set Minumum # of animals in Average to filter data-set',
+        'Filter out breeds with a small data count.',
         1, 7, (1)
     )
 
@@ -256,31 +298,36 @@ def place_breeds_in_sidepanel():
     HAVING Count(*) > %d
     """ % (min_animal_slider_count)
 
-    breeds_list = st.sidebar.multiselect(
-        'Choose the breeds you want to see (will ignore the number of breeds set below if this field is set)',
-        breeds_array, st.session_state.selected_breeds, key="selected_breeds"
+def place_orgs_in_sidepanel():
+    global orgs_list
+    global orgs_array
+
+    list_orgs_query = """
+        SELECT DISTINCT(organization_name) FROM "%s" ORDER BY organization_name ASC;
+        """ % DATABASE_TABLE
+
+    if showQueries:
+        st.markdown(list_orgs_query)
+
+    orgs_results = run_query(list_orgs_query, conn_no_dict)
+
+    orgs_array = []
+    for breed in orgs_results:
+        orgs_array.append(breed[0])
+
+    orgs_list = st.multiselect(
+        'Choose the orgs you want to see (will ignore the number of orgs set below if this field is set)',
+        orgs_array, st.session_state.selected_orgs, key="selected_orgs"
     )
-    if len(breeds_list) <= 0:
-        number_of_breeds_slider = st.sidebar.slider(
-            'How many breeds would you like to see?',
-            1, 100, (20)
+    if len(orgs_list) <= 0:
+        number_of_orgs_slider = st.slider(
+            'How many orgs would you like to see?',
+            1, 100, (10)
         )
     else:
-        number_of_breeds_slider = 0
+        number_of_orgs_slider = 0
 
-    return number_of_breeds_slider
-
-# def max_los_ctrlr_in_sidepanel():
-#     global maxLos
-#     global breeds_array
-#     list_breeds_query = """
-#         SELECT DISTINCT(breed_primary) FROM "%s" ORDER BY breed_primary ASC;
-#         """ % DATABASE_TABLE
-#     number_of_breeds_slider = st.sidebar.slider(
-#         'Set Maximum Los date to sanitize data',
-#         1, 300, (60)
-#     )
-#     pass
+    return number_of_orgs_slider
 
 def place_other_attributes_in_sidepanel(attribute_info_array):
     return_lists = []
@@ -290,7 +337,7 @@ def place_other_attributes_in_sidepanel(attribute_info_array):
     for attribute_info in attribute_info_array:
         attributes_array.append(attribute_info["text"])
 
-    attributes_radio = st.sidebar.radio(
+    attributes_radio = st.radio(
         "Choose an attribute",
         attributes_array
     )
@@ -303,7 +350,7 @@ def place_other_attributes_in_sidepanel(attribute_info_array):
         if text == attributes_radio:
             array_of_items = create_array_of_db_values(db_column)
 
-            selectbox = st.sidebar.multiselect(
+            selectbox = st.multiselect(
                 text,
                 array_of_items,
                 default=array_of_items
@@ -317,8 +364,8 @@ def place_other_attributes_in_sidepanel(attribute_info_array):
 def place_los_sort_in_sidepanel(number_of_breeds_slider):
     global los_sort
     global limit_query
-    
-    los_sort_selectbox = st.sidebar.selectbox(
+
+    los_sort_selectbox = st.selectbox(
         'Sort By Length of Stay',
         ('DESC', 'ASC', 'NONE')
     )
@@ -343,7 +390,7 @@ def show_bar_chart(data_frame, plotly_y, plotly_text, remove_count):
                 data_frame,
                 y=plotly_y,
                 color=plotly_text,
-                text=plotly_text,
+                text=plotly_text
             )
         else:
             plotly_bar = px.bar(
