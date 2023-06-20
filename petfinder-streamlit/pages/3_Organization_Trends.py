@@ -12,7 +12,7 @@ if "selected_orgs" not in st.session_state:
 if "selected_locations" not in st.session_state:
     st.session_state['selected_locations'] = ["Chicago"]
 
-org_scatterplot_tab, org_tab = st.tabs(["Organization Scatter Plot", "TBD"])
+org_scatterplot_tab, org_tab = st.tabs(["Organization Scatter Plot", "-----------"])
 
 with org_scatterplot_tab:
     st.markdown("# Rescue Dog Trends")
@@ -31,10 +31,11 @@ with org_scatterplot_tab:
         orgs_array.append(org[0])
 
     selected_org = st.selectbox('Choose the organization you want to see', orgs_array)
-
+    formatted_org = selected_org.replace("'", "'\'")
 
     selected_org_query = """WHERE organization_name = '%s';
-    """ % (selected_org)
+    """ % (formatted_org)
+
     los_by_org_altair_query = """
         SELECT * FROM "%s" %s;
         """ % (pfglobals.DATABASE_TABLE, selected_org_query)

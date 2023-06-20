@@ -1,9 +1,9 @@
 <h1 align="center">Rescue Chicago</h1>
-<h4 align="center">PetFinder Dashboard for Rescue Dogs</h4>
+<h4 align="center">PetFinder Dashboard for Rescue Dogs - <a href="https://codeforchicago-rescuechi.herokuapp.com/">Live site</a></h4>
 
 <div align="center"><img src="https://user-images.githubusercontent.com/89172742/193910009-1faf3fe1-d991-4ccf-afde-fa4d448f27aa.png" width="552" height="278" /></div>
 
-<h5 align="center"><i>Live site</i></h5>
+<h5 align="center"></h5>
 
 ### Table of Contents
 - [Main purpose](#main)
@@ -24,10 +24,10 @@ To learn more about the journeys of these rescued pups, we pulled data from the 
 - We then created a first iteration of a publicly-available, interactive data dashboard that can be used to analyze how different dog characteristics may correlate with average length of stay in a shelter prior to adoption.
 
 #### Key Features
-- Breed Trends by Length of Stay
-- Other Trends by Length of Stay
-- Breed Trends by Count
-- Other Trends by Count
+- Breed and Other Trends by Length of Stay
+- Breed and Other Trends by Count
+- Organization Trends
+- Trends Over Time
 
 #### Technology used
 
@@ -173,19 +173,16 @@ Once that's done you can follow the guide up above. I recommend using [TablePlus
 
 ✅ Add other fields from Petfinder.
 
-Adoptability Rating -  Train regression model to predict LOS.
+✅ Compare Organizations and their length of stay.
 
-Compare Organizations and their length of stay.
+Adoptability Rating -  Train regression model to predict LOS.
 
 Expand to other pets.
 
 ## Conclusion and Contributions
-Contributions:  <a href="https://github.com/kaylarobinson077">Kayla Robinson</a>, <a href="https://github.com/TheeChris">Chris Lynch</a>, <a href="https://github.com/ecooperman">Evan Cooperman</a>, Joseph Adorno, Cara Karter, <a href="https://github.com/Jared-Kunhart">Jared Kunhart</a>, <a href="https://github.com/VegetablePC">Jon Hall</a>, <a href="https://github.com/JJD129">Jhen Dimaano</a>, <a href="https://github.com/Sailia">Syema Ailia</a>, <a href="https://github.com/JayDrojas">Damian</a>, <a href="https://github.com/Fiasco071">Steve Choi</a>, <a href="https://github.com/avigutta">Avi Gutta</a>
+Contributions:  <a href="https://github.com/kaylarobinson077">Kayla Robinson</a>, <a href="https://github.com/TheeChris">Chris Lynch</a>, <a href="https://github.com/ecooperman">Evan Cooperman</a>, Joseph Adorno, Cara Karter, <a href="https://github.com/Jared-Kunhart">Jared Kunhart</a>, <a href="https://github.com/JJD129">Jhen Dimaano</a>, <a href="https://github.com/VegetablePC">Jon Hall</a>, <a href="https://github.com/JayDrojas">Damian Rojas</a>, <a href="https://github.com/Fiasco071">Steve Choi</a>, <a href="https://github.com/sophmain">Sophie Main</a>
 
 <h5>Project originally made during Women Who Code Hackathon for Social Good 2022.</h5>
 
 ### [Rescue Chicago](https://rescuechi.org/)
 <img src="https://user-images.githubusercontent.com/89172742/193914404-16b5c6b5-bdf0-46e1-9e52-78c8b3cdd381.png" width="594" height="303" />
-
-### [Code for Chicago](https://codeforchicago.org/)
-<img src="https://user-images.githubusercontent.com/89172742/193916463-96b92d44-9696-4207-b82b-bafe52f8ce61.png" width="594" height="303" />
