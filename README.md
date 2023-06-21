@@ -83,11 +83,11 @@ To learn more about the journeys of these rescued pups, we pulled data from the 
 
 ### Data Runner (Recommended)
 
-As an alternative to running Data Getter/Cleaner/Putter one at a time in the below directions, you can run the below command in your root directory to run all three at once in a CLI.
-Enter the specific location and amount of pages you'd like to fetch.
+For pulling data from Petfinder in a CLI, run the command below. You'll be prompted for entering a specific location (ex: Chicago, IL). The amount of pages you'd like to fetch (ex: 10), use 0 to return MAX amount of data (Can max out API Key limits). And whether to store the data in your Local PSQL or in Heroku's PSQL.
 ```bash
 python petfinder-data/data_runner.py
 ```
+**Note: This is an alternative to running Data Getter/Cleaner/Putter one at a time in the below directions.**
 
 ### Data Getter
 

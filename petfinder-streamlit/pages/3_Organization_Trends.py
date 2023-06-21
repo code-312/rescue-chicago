@@ -9,20 +9,20 @@ st.set_page_config(layout="wide")
 
 if "selected_orgs" not in st.session_state:
     st.session_state['selected_orgs'] = []
-if "selected_locations" not in st.session_state:
-    st.session_state['selected_locations'] = ["Chicago"]
+
+st.sidebar.markdown("## Location Settings")
+pfglobals.org_locations()
 
 org_scatterplot_tab, org_tab = st.tabs(["Organization Scatter Plot", "-----------"])
 
 with org_scatterplot_tab:
     st.markdown("# Rescue Dog Trends")
     st.markdown("## Organization Trends from Petfinder Data")
-    st.markdown("##### Details from a specific Organization displayed via Altair Scatter Plot chart.")
-    # st.caption("Note: No sidebar settings apply to this chart.")
-
+    st.markdown("### Organization Statistics based off average length of time from intake to adoption.")
+    st.markdown("Use the sidebar filter to sort Organizations by location.")
     list_orgs_query = """
-        SELECT DISTINCT(organization_name) FROM "%s" ORDER BY organization_name ASC;
-        """ % pfglobals.DATABASE_TABLE
+        SELECT DISTINCT(organization_name) FROM "%s" WHERE city = '%s' ORDER BY organization_name ASC;
+        """ % (pfglobals.DATABASE_TABLE, pfglobals.org_location)
 
     orgs_results = pfglobals.run_query(list_orgs_query, pfglobals.conn_no_dict)
 
@@ -45,7 +45,6 @@ with org_scatterplot_tab:
     selected_org_state = altair_df['state'][0]
     # scale = alt.Scale(domain=['Female', 'Male'], range=['#7C33FF', '#0867a1'])
     org_chart = alt.Chart(altair_df, title=f'{selected_org} in {selected_org_city}, {selected_org_state}').mark_circle(size=60).encode(
-        # alt.X('published_at:T').title('hello'),
         x=alt.X('published_at:T', title='Date Posted'),
         y=alt.Y('los', title='Length of Stay by Days'),
         # color=alt.Color('gender', scale=scale),
