@@ -1,7 +1,8 @@
 <h1 align="center">Rescue Chicago</h1>
 <h4 align="center">PetFinder Dashboard for Rescue Dogs - <a href="https://codeforchicago-rescuechi.herokuapp.com/">Live site</a></h4>
 
-<div align="center"><img src="https://user-images.githubusercontent.com/89172742/193910009-1faf3fe1-d991-4ccf-afde-fa4d448f27aa.png" width="552" height="278" /></div>
+<div align="center"><img src="https://github.com/Code-For-Chicago/rescue-chicago/assets/89172742/d1ea49d5-7329-4940-bad7-a665ace51971" width="552" height="278" /></div>
+
 
 <h5 align="center"></h5>
 
