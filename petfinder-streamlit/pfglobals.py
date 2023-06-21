@@ -7,7 +7,7 @@ import plotly.express as px
 from config import HEROKU_URL, SHOW_QUERIES, CHART_TYPE, LOCAL_DATABASE_URL
 
 
-showQueries = SHOW_QUERIES == "False"
+showQueries = SHOW_QUERIES == "True"
 showChartType = CHART_TYPE
 DATABASE_URL = HEROKU_URL
 
@@ -271,20 +271,18 @@ def location_sidepanel():
 def max_los_sidepanel():
     global max_los
 
-    max_los_query = """
-        SELECT MAX(los) FROM "%s";
-        """ % DATABASE_TABLE
+    # max_los_query = """
+    #     SELECT MAX(los) FROM "%s";
+    #     """ % DATABASE_TABLE
 
-    max_bound_los = run_query(max_los_query, conn_no_dict)
+    # max_bound_los = run_query(max_los_query, conn_no_dict)
 
     max_los_slider_value = st.sidebar.slider(
         'Set Maximum Length of Stay to filter outliers. (Default is filtering out a length of stay 365 days or greater)',
         1, 365, (365)
     )
-    # if st.session_state['selected_locations'] == []:
+
     max_los = """ WHERE los <= %d """ % (max_los_slider_value)
-    # else:
-    #     max_los = """ AND los <= %d """ % (max_los_slider_value)
 
 def max_count_sidepanel():
     global min_animal_count
@@ -297,37 +295,6 @@ def max_count_sidepanel():
     min_animal_count = """
     HAVING Count(*) > %d
     """ % (min_animal_slider_count)
-
-def place_orgs_in_sidepanel():
-    global orgs_list
-    global orgs_array
-
-    list_orgs_query = """
-        SELECT DISTINCT(organization_name) FROM "%s" ORDER BY organization_name ASC;
-        """ % DATABASE_TABLE
-
-    if showQueries:
-        st.markdown(list_orgs_query)
-
-    orgs_results = run_query(list_orgs_query, conn_no_dict)
-
-    orgs_array = []
-    for breed in orgs_results:
-        orgs_array.append(breed[0])
-
-    orgs_list = st.multiselect(
-        'Choose the orgs you want to see (will ignore the number of orgs set below if this field is set)',
-        orgs_array, st.session_state.selected_orgs, key="selected_orgs"
-    )
-    if len(orgs_list) <= 0:
-        number_of_orgs_slider = st.slider(
-            'How many orgs would you like to see?',
-            1, 100, (10)
-        )
-    else:
-        number_of_orgs_slider = 0
-
-    return number_of_orgs_slider
 
 def place_other_attributes_in_sidepanel(attribute_info_array):
     return_lists = []
@@ -408,3 +375,16 @@ def show_bar_chart(data_frame, plotly_y, plotly_text, remove_count):
         st.bar_chart(data_frame)
     else:
         st.plotly_chart(plotly_bar, use_container_width=True)
+
+def org_locations():
+    global org_location
+    list_loc_query = """
+    SELECT DISTINCT(city) FROM "%s" ORDER BY city ASC;
+    """ % DATABASE_TABLE
+    org_location_results = run_query(list_loc_query, conn_no_dict)
+    org_location_array = []
+    for location in org_location_results:
+        org_location_array.append(location[0])
+    default_selection = org_location_array.index('Chicago')
+    org_location = st.sidebar.selectbox(
+        'Show Organizations by location.', org_location_array, index=default_selection)
