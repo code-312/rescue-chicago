@@ -2,9 +2,10 @@ import streamlit as st
 import pandas as pd
 import os
 import psycopg2
+import requests
 from psycopg2.extras import RealDictCursor
 import plotly.express as px
-from config import HEROKU_URL, SHOW_QUERIES, CHART_TYPE, LOCAL_DATABASE_URL
+from config import HEROKU_URL, SHOW_QUERIES, CHART_TYPE, LOCAL_DATABASE_URL, PETFINDER_KEY, PETFINDER_SECRET
 
 
 showQueries = SHOW_QUERIES == "True"
@@ -389,3 +390,29 @@ def org_locations():
     default_selection = org_location_array.index('Chicago')
     org_location = st.sidebar.selectbox(
         'Show Organizations by location.', org_location_array, index=default_selection)
+
+def check_for_secrets():
+    assert os.getenv("PETFINDER_KEY") is not None
+    assert os.getenv("PETFINDER_SECRET") is not None
+
+def get_token() -> str:
+    check_for_secrets()
+
+    url = "https://api.petfinder.com/v2/oauth2/token"
+
+    CLIENT_ID = os.getenv("PETFINDER_KEY")
+    CLIENT_SECRET = os.getenv("PETFINDER_SECRET")
+
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+    }
+
+    data = f"grant_type=client_credentials&client_id={CLIENT_ID}&client_secret={CLIENT_SECRET}"
+
+    response = requests.post(url, headers=headers, data=data)
+
+    # make sure it succeeded
+    assert response.status_code == 200
+
+    # just return the access_token
+    return response.json()["access_token"]
