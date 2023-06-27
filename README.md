@@ -1,9 +1,10 @@
 <h1 align="center">Rescue Chicago</h1>
-<h4 align="center">PetFinder Dashboard for Rescue Dogs</h4>
+<h4 align="center">PetFinder Dashboard for Rescue Dogs - <a href="https://codeforchicago-rescuechi.herokuapp.com/">Live site</a></h4>
 
-<div align="center"><img src="https://user-images.githubusercontent.com/89172742/193910009-1faf3fe1-d991-4ccf-afde-fa4d448f27aa.png" width="552" height="278" /></div>
+<div align="center"><img src="https://github.com/Code-For-Chicago/rescue-chicago/assets/89172742/d1ea49d5-7329-4940-bad7-a665ace51971" width="552" height="278" /></div>
 
-<h5 align="center">  By:  <a href="https://github.com/kaylarobinson077">Kayla Robinson</a>, <a href="https://github.com/TheeChris">Chris Lynch</a>, <a href="https://github.com/ecooperman">Evan Cooperman</a>, Joseph Adorno, Cara Karter, <a href="https://github.com/Jared-Kunhart">Jared Kunhart</a>, <a href="https://github.com/VegetablePC">Jon Hall</a>, <a href="https://github.com/JJD129">Jhen Dimaano</a>, <a href="https://github.com/Sailia">Syema Ailia</a> - <a href="https://codeforchicago-rescuechi.herokuapp.com/"><i>Live site</i></h5>
+
+<h5 align="center"></h5>
 
 ### Table of Contents
 - [Main purpose](#main)
@@ -24,10 +25,10 @@ To learn more about the journeys of these rescued pups, we pulled data from the 
 - We then created a first iteration of a publicly-available, interactive data dashboard that can be used to analyze how different dog characteristics may correlate with average length of stay in a shelter prior to adoption.
 
 #### Key Features
-- Breed Trends by Length of Stay
-- Other Trends by Length of Stay
-- Breed Trends by Count
-- Other Trends by Count
+- Breed and Other Trends by Length of Stay
+- Breed and Other Trends by Count
+- Organization Trends
+- Trends Over Time
 
 #### Technology used
 
@@ -83,11 +84,11 @@ To learn more about the journeys of these rescued pups, we pulled data from the 
 
 ### Data Runner (Recommended)
 
-As an alternative to running Data Getter/Cleaner/Putter one at a time in the below directions, you can run the below command in your root directory to run all three at once in a CLI.
-Enter the specific location and amount of pages you'd like to fetch.
+For pulling data from Petfinder in a CLI, run the command below. You'll be prompted for entering a specific location (ex: Chicago, IL). The amount of pages you'd like to fetch (ex: 10), use 0 to return MAX amount of data (Can max out API Key limits). And whether to store the data in your Local PSQL or in Heroku's PSQL.
 ```bash
 python petfinder-data/data_runner.py
 ```
+**Note: This is an alternative to running Data Getter/Cleaner/Putter one at a time in the below directions.**
 
 ### Data Getter
 
@@ -173,17 +174,16 @@ Once that's done you can follow the guide up above. I recommend using [TablePlus
 
 ✅ Add other fields from Petfinder.
 
-Adoptability Rating -  Train regression model to predict LOS.
+✅ Compare Organizations and their length of stay.
 
-Compare Organizations and their length of stay.
+Adoptability Rating -  Train regression model to predict LOS.
 
 Expand to other pets.
 
 ## Conclusion and Contributions
-<h5>Project made during Women Who Code Hackathon for Social Good 2022.</h5>
+Contributions:  <a href="https://github.com/kaylarobinson077">Kayla Robinson</a>, <a href="https://github.com/TheeChris">Chris Lynch</a>, <a href="https://github.com/ecooperman">Evan Cooperman</a>, Joseph Adorno, Cara Karter, <a href="https://github.com/Jared-Kunhart">Jared Kunhart</a>, <a href="https://github.com/JJD129">Jhen Dimaano</a>, <a href="https://github.com/VegetablePC">Jon Hall</a>, <a href="https://github.com/JayDrojas">Damian Rojas</a>, <a href="https://github.com/Fiasco071">Steve Choi</a>, <a href="https://github.com/sophmain">Sophie Main</a>
+
+<h5>Project originally made during Women Who Code Hackathon for Social Good 2022.</h5>
 
 ### [Rescue Chicago](https://rescuechi.org/)
 <img src="https://user-images.githubusercontent.com/89172742/193914404-16b5c6b5-bdf0-46e1-9e52-78c8b3cdd381.png" width="594" height="303" />
-
-### [Code for Chicago](https://codeforchicago.org/)
-<img src="https://user-images.githubusercontent.com/89172742/193916463-96b92d44-9696-4207-b82b-bafe52f8ce61.png" width="594" height="303" />
