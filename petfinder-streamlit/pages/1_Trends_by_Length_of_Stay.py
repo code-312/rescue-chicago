@@ -87,7 +87,7 @@ with breed_trends_tab:
             st.markdown(los_by_breed_query)
 
         if pfglobals.run_query(los_by_breed_query, pfglobals.conn_dict) == []:
-            results = '<p style="font-family:Courier; color:Red; font-size: 20px;">No results were found with this criteria! Please update your parameters to find results.</p>'
+            results = '<br><br><p style="font-family:Courier; color:Red; font-size: 20px; font-weight: Bold;">No results were found with this criteria.</p><br><br>'
             st.markdown(results, unsafe_allow_html=True)
         else:
             df = pfglobals.create_data_frame(pfglobals.run_query(los_by_breed_query, pfglobals.conn_dict), "breed_primary")
@@ -98,9 +98,9 @@ with breed_trends_tab:
     #######################################################
         st.markdown("### How do different dog characteristics (gender, size, coat length, age, etc.) interact with breed to "
                     "affect length of stay?")
-        st.markdown("Use the filter widget in the sidebar to select specific breeds to visualize, or to select a specific "
+        st.markdown("Use the filter widget above to select specific breeds to visualize, or to select a specific "
                     "number of random breeds to see visualized at one time. Then select values for other characteristics from "
-                    "the drop down lists below to compare on the graphs. These side-by-side graphs illustrate how these "
+                    "the drop down lists to compare on the graphs. These side-by-side graphs illustrate how these "
                     "characteristics impact average length of stay for dogs of the selected breeds.")
 
     group_labels = ['Group 1', 'Group 2']
@@ -228,11 +228,13 @@ with other_trends_tab:
     #######################################################
     #                Side by Side Charts                  #
     #######################################################
-        st.markdown("#### ")
+        st.markdown("#")
+        st.markdown("#")
+        st.markdown("#")
         st.markdown("### How do different dog characteristics (gender, size, coat length, age, etc.) interact with other "
                     "attributes to affect length of stay?")
-        st.markdown("Use the filter widget in the sidebar to select a specific attribute to visualize.  Then select values "
-                    "for other characteristics from the drop down lists below to compare on the graphs. These side-by-side "
+        st.markdown("Use the filter widget above to select a specific attribute to visualize.  Then select values "
+                    "for other characteristics from the drop down lists to compare on the graphs. These side-by-side "
                     "graphs illustrate how these characteristics impact average length of stay for dogs with the specified "
                     "attributes.")
 
