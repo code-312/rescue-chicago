@@ -15,5 +15,5 @@ SIZE_DICT={
 TARGET_COLS = ["coat", "organization_name", "breed_primary",
                "color_primary", "city", "state"]
 
-BINARY_COLS = ["breed_mixed", "breed_unknown", "attribute_spayed_neutered", "attribute_house_trained", 
+BINARY_COLS = ["gender","breed_mixed", "breed_unknown", "attribute_spayed_neutered", "attribute_house_trained", 
                "attribute_shots_current", "attribute_special_needs"]
