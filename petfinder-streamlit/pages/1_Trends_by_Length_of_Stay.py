@@ -21,6 +21,7 @@ if "selected_breeds" not in st.session_state:
     st.session_state['selected_breeds'] = []
 if "selected_locations" not in st.session_state:
     st.session_state['selected_locations'] = ["Chicago"]
+
 #######################################################
 #          Breed Trends by Length of Stay Tab         #
 #######################################################
@@ -72,6 +73,8 @@ with breed_trends_tab:
                 location_clause += "'%s'" % location
                 location_iterations += 1
             location_clause += ") "
+        else:
+            location_clause = ''
 
         if len(where_clause) > 0:
             los_by_breed_query = """
@@ -213,6 +216,8 @@ with other_trends_tab:
             attr_location_clause += "'%s'" % attr_location
             attr_location_iterations += 1
         attr_location_clause += ") "
+    else:
+        attr_location_clause = ''
 
     los_by_attribute_query = """
         SELECT %s,AVG(los)::bigint as "%s",Count(*) as "%s" FROM "%s" %s %s %s GROUP BY %s %s %s %s;
