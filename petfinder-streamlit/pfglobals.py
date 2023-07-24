@@ -267,7 +267,7 @@ def location_sidepanel():
         location_array.append(location[0])
 
     location_list = st.sidebar.multiselect(
-        'City (clear selections to show all location data.)', location_array, st.session_state.selected_locations, key="selected_locations"
+        'Select a City (clear selections to show all locations.)', location_array, st.session_state.selected_locations, key="selected_locations"
     )
 
 def max_los_sidepanel():
@@ -389,7 +389,7 @@ def org_locations():
         org_location_array.append(location[0])
     default_selection = org_location_array.index('Chicago')
     org_location = st.sidebar.selectbox(
-        'Show Organizations by location.', org_location_array, index=default_selection)
+        'Select a location.', org_location_array, index=default_selection)
 
 def check_for_secrets():
     assert os.getenv("PETFINDER_KEY") is not None
