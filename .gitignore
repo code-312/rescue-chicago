@@ -166,3 +166,5 @@ cython_debug/
 
 .DS_Store
 petfinder-model/ExploratoryDataAnalysis.ipynb
+petfinder-model/model copy.ipynb
+petfinder-model/Model Writeup.docx
