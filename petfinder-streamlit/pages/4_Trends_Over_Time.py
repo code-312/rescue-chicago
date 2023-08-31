@@ -6,6 +6,8 @@ import pfglobals
 if "selected_locations" not in st.session_state:
     st.session_state['selected_locations'] = ["Chicago"]
 
+curr_locations = st.session_state['selected_locations']
+
 st.set_page_config(layout="wide")
 
 monthly_trends_tab, yearly_trends_tab = st.tabs(["Monthly Trends", "Yearly Trends"])
@@ -26,7 +28,8 @@ else:
     location_clause = ''
 
 monthly_query = """
-SELECT COUNT(id) as count_dogs, TO_CHAR(published_at, 'YYYY-MM') as date, gender FROM "%s" %s GROUP BY date, gender ORDER BY date
+SELECT COUNT(id) as count_dogs, TO_CHAR(published_at, 'YYYY-MM') as date, gender FROM "%s" %s
+GROUP BY date, gender ORDER BY date
 """ % (pfglobals.DATABASE_TABLE, location_clause)
 
 with monthly_trends_tab:
@@ -39,10 +42,10 @@ with monthly_trends_tab:
 
     monthly_df = pfglobals.create_data_frame(pfglobals.run_query(monthly_query,  pfglobals.conn_dict), index_column="date")
     monthly_df = monthly_df.reset_index(drop=False)
+    monthly_df = monthly_df[monthly_df['date'] > '2010-01']
     monthly_df['date'] = pd.to_datetime(monthly_df['date']).dt.strftime('%B %Y')
-
-    monthly_trends_chart = alt.Chart(monthly_df, title=f"{', '.join(st.session_state['selected_locations'])} Trends by Month").mark_bar(size=5, align='center').encode(
-        x=alt.X('date:T', title='Trends Over Time'),
+    monthly_trends_chart = alt.Chart(monthly_df, title=f"{', '.join(curr_locations)} Trends by Month").mark_bar(size=5, align='center').encode(
+        x=alt.X('yearmonth(date):T', title='Trends Over Time'),
         y=alt.Y('count_dogs', title='Total Dogs per Month'),
         color=alt.Color('gender:N', title='Gender'),
         tooltip=[alt.Tooltip('month(date):T', title='Month'),
@@ -79,9 +82,11 @@ with yearly_trends_tab:
     """ % (location_clause)
 
     yearly_df = pfglobals.create_data_frame(pfglobals.run_query(yearly_query,  pfglobals.conn_dict), index_column="status_changed_at_year")
-
-    yearly_trends_chart = alt.Chart(yearly_df.reset_index(), title=f"{', '.join(st.session_state['selected_locations'])} Trends by Year").mark_bar(size=50, align='center', color='#30a2da').encode(
-        x=alt.X('year(status_changed_at_year):T', title='Trends Over Time'),
+    yearly_df = yearly_df.reset_index(drop=False)
+    yearly_df = yearly_df.astype({"status_changed_at_year": str})
+    yearly_df = yearly_df[yearly_df['status_changed_at_year'] > '2010']
+    yearly_trends_chart = alt.Chart(yearly_df, title=f"{', '.join(curr_locations)} Trends by Year").mark_bar(size=60, align='center', color='#30a2da').encode(
+        x=alt.X('year(status_changed_at_year):O', title='Trends Over Time'),
         y=alt.Y('count_dogs', title='Total Dogs per Year'),
         tooltip=[alt.Tooltip('year(status_changed_at_year):T', title='Year'),
                 alt.Tooltip('count_dogs', title='Total Dogs')]

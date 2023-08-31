@@ -18,7 +18,7 @@ acknowledgements_text = "Project documentation is available on Github. The Petfi
                         "the Petfinder for Developers webpage. This project was originally inspired by conversations " \
                         "that the Code for Chicago data workgroup had with Rescue Chicago about how data could inform " \
                         "their efforts to support and unify Chicago’s shelter and rescue community. This application " \
-                        "was built by Evan Cooperman, Kayla Robinson, Cara Karter, Joseph Adorno, and E. Chris Lynch. "
+                        "was built by Evan Cooperman, Kayla Robinson, Cara Karter, Joseph Adorno, E. Chris Lynch, Jared Kunhart and Jhen Dimaano."
 st.write(acknowledgements_text)
 
 st.markdown("## Visualization Pages")
@@ -26,3 +26,11 @@ st.markdown("* <a href=\"/Trends_by_Length_of_Stay\" target=\"_self\">Trends by 
 st.markdown("* <a href=\"/Trends_by_Count\" target=\"_self\">Trends by Count</a>", unsafe_allow_html=True)
 st.markdown("* <a href=\"/Organization_Trends\" target=\"_self\">Organization Trends</a>", unsafe_allow_html=True)
 st.markdown("* <a href=\"/Trends_Over_Time\" target=\"_self\">Trends Over Time</a>", unsafe_allow_html=True)
+
+def initialize_session_state():
+    if "selected_locations" not in st.session_state:
+        st.session_state['selected_locations'] = ["Chicago"]
+    if "selected_breeds" not in st.session_state:
+        st.session_state['selected_breeds'] = []
+
+initialize_session_state()
