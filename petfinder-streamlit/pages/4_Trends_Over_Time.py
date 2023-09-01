@@ -33,11 +33,10 @@ GROUP BY date, gender ORDER BY date
 """ % (pfglobals.DATABASE_TABLE, location_clause)
 
 with monthly_trends_tab:
-    st.markdown("# Rescue Dog Trends")
     st.markdown("## Trends Over Time")
 
     st.markdown("### How does intake vary over time?")
-    st.caption("Use the sidebar filter to add or remove locations.")
+    st.markdown("Sorted monthly starting from February 2010. Use the sidebar filter to add or remove locations.")
     st.markdown("#")
 
     monthly_df = pfglobals.create_data_frame(pfglobals.run_query(monthly_query,  pfglobals.conn_dict), index_column="date")
@@ -69,10 +68,9 @@ with monthly_trends_tab:
     st.altair_chart(monthly_trends_chart, use_container_width=True)
 
 with yearly_trends_tab:
-    st.markdown("# Rescue Dog Trends")
     st.markdown("## Trends Over Time")
     st.markdown("### How does intake vary over time?")
-    st.caption("Use the sidebar filter to add or remove locations.")
+    st.markdown("Sorted yearly starting from 2010. Use the sidebar filter to add or remove locations.")
     st.markdown("#")
 
     yearly_query = """

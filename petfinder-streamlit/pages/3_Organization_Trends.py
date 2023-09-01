@@ -10,7 +10,6 @@ st.set_page_config(layout="wide")
 st.sidebar.markdown("## Location Settings")
 pfglobals.org_locations()
 
-st.markdown("# Rescue Dog Trends")
 st.markdown("## Organization Trends from Petfinder Data")
 st.markdown("### How does an Organization affect length of time from intake to adoption?")
 st.caption("Use the sidebar filter to sort Organizations by location.")

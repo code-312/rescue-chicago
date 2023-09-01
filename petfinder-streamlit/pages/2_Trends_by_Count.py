@@ -16,18 +16,18 @@ breed_trends_tab, other_trends_tab = st.tabs(["Breed Trends by Count", "Other Tr
 
 if "selected_breeds" not in st.session_state:
     st.session_state['selected_breeds'] = []
+
 if "selected_locations" not in st.session_state:
     st.session_state['selected_locations'] = ["Chicago"]
 #######################################################
 #             Breed Trends by Count Tab               #
 #######################################################
 with breed_trends_tab:
-    st.markdown("# Rescue Dog Trends")
     st.markdown("## Breed Trends from Petfinder Data")
     st.markdown("### How does dog breed relate to the number of dogs waiting to be adopted?")
     st.markdown("Use the location widget in the "
                 "sidebar to select a location (default is Chicago). "
-                "Use the Filter widget in the sidebar to exclude length of stay greater than the specified value (default is 60 days). ")
+                "Use the Filter widget in the sidebar to exclude length of stay greater than the specified value (default is 365 days). ")
     st.sidebar.markdown("## Location Settings")
     pfglobals.location_sidepanel()
     st.sidebar.caption("Note: Location setting only applies to the main chart.")
@@ -162,7 +162,6 @@ with breed_trends_tab:
 #             Other Trends by Count Tab               #
 #######################################################
 with other_trends_tab:
-    st.markdown("# Rescue Dog Trends")
     st.markdown("## Other Trends from Petfinder Data")
     st.markdown("### How do different dog characteristics (gender, size, coat length, age) affect the number of dogs "
                 "waiting to be adopted?")

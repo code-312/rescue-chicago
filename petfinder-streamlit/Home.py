@@ -6,7 +6,7 @@ intro_text = "In 2021 alone, Chicago Animal Care and Control, the city’s only 
              "will be returned to their owner or adopted out directly, more than half of these animals are " \
              "transferred to another animal rescue organization through the shelter’s Homeward Bound partnerships. To " \
              "learn more about the journeys of these rescued pups, we pulled data from the Petfinder API for dogs " \
-             "located within 100 miles of Chicago. Petfinder is the most widely used online database of adoptable " \
+             "located within 100 miles of Chicago (now updated to include many cities). Petfinder is the most widely used online database of adoptable " \
              "pets. Many Chicago animal rescue organizations maintain their own organization pages and adoptable pet " \
              "listings on the site. The interactive data visualizations on the Breed Trends page and Other Trends can " \
              "be used to illustrate how different dog characteristics affect the average length of stay of these " \

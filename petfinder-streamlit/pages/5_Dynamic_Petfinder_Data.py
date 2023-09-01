@@ -6,8 +6,6 @@ import json
 
 st.set_page_config(layout="wide")
 
-st.markdown("🚧Coming Soon🚧")
-
 token = pfglobals.get_token()
 
 
