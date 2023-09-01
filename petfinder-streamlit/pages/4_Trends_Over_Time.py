@@ -115,7 +115,6 @@ with yearly_trends_tab:
 
 #     los_df = pfglobals.create_data_frame(pfglobals.run_query(los_query,  pfglobals.conn_dict), index_column="date")
 #     los_df = los_df.reset_index(drop=False)
-#     print(los_df)
 
 #     los_trends_chart = alt.Chart(los_df, title=f"{', '.join(st.session_state['selected_locations'])} Trends by Length of Stay").mark_bar().encode(
 #         x=alt.X('date:T', title='Trends Over Time'),

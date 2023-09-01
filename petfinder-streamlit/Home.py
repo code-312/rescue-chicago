@@ -26,11 +26,3 @@ st.markdown("* <a href=\"/Trends_by_Length_of_Stay\" target=\"_self\">Trends by 
 st.markdown("* <a href=\"/Trends_by_Count\" target=\"_self\">Trends by Count</a>", unsafe_allow_html=True)
 st.markdown("* <a href=\"/Organization_Trends\" target=\"_self\">Organization Trends</a>", unsafe_allow_html=True)
 st.markdown("* <a href=\"/Trends_Over_Time\" target=\"_self\">Trends Over Time</a>", unsafe_allow_html=True)
-
-def initialize_session_state():
-    if "selected_locations" not in st.session_state:
-        st.session_state['selected_locations'] = ["Chicago"]
-    if "selected_breeds" not in st.session_state:
-        st.session_state['selected_breeds'] = []
-
-initialize_session_state()
