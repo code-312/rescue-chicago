@@ -13,6 +13,13 @@ intro_text = "In 2021 alone, Chicago Animal Care and Control, the city’s only 
              "Chicagoland dogs in a shelter or foster placement prior to adoption. "
 st.write(intro_text)
 
+st.markdown("## Visualization Pages")
+st.markdown("* <a href=\"/Trends_by_Length_of_Stay\" target=\"_self\">Trends by Length of Stay</a>", unsafe_allow_html=True)
+st.markdown("* <a href=\"/Trends_by_Count\" target=\"_self\">Trends by Count</a>", unsafe_allow_html=True)
+st.markdown("* <a href=\"/Organization_Trends\" target=\"_self\">Organization Trends</a>", unsafe_allow_html=True)
+st.markdown("* <a href=\"/Trends_Over_Time\" target=\"_self\">Trends Over Time</a>", unsafe_allow_html=True)
+st.markdown("* <a href=\"/Dynamic_Petfinder_Data\" target=\"_self\">Dynamic Petfinder Data</a>", unsafe_allow_html=True)
+
 st.markdown("## Acknowledgements")
 acknowledgements_text = "Project documentation is available on Github. The Petfinder API is easily accessible through " \
                         "the Petfinder for Developers webpage. This project was originally inspired by conversations " \
@@ -20,9 +27,3 @@ acknowledgements_text = "Project documentation is available on Github. The Petfi
                         "their efforts to support and unify Chicago’s shelter and rescue community. This application " \
                         "was built by Evan Cooperman, Kayla Robinson, Cara Karter, Joseph Adorno, E. Chris Lynch, Jared Kunhart and Jhen Dimaano."
 st.write(acknowledgements_text)
-
-st.markdown("## Visualization Pages")
-st.markdown("* <a href=\"/Trends_by_Length_of_Stay\" target=\"_self\">Trends by Length of Stay</a>", unsafe_allow_html=True)
-st.markdown("* <a href=\"/Trends_by_Count\" target=\"_self\">Trends by Count</a>", unsafe_allow_html=True)
-st.markdown("* <a href=\"/Organization_Trends\" target=\"_self\">Organization Trends</a>", unsafe_allow_html=True)
-st.markdown("* <a href=\"/Trends_Over_Time\" target=\"_self\">Trends Over Time</a>", unsafe_allow_html=True)

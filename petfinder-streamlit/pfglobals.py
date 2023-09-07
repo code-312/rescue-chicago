@@ -277,8 +277,10 @@ def max_los_sidepanel():
     global max_los
 
     max_los_slider_value = st.sidebar.slider(
-        'Set Maximum Length of Stay to filter outliers. (Default is filtering out a length of stay 365 days or greater)',
-        1, 365, (365)
+        'Set Maximum Length of Stay to filter outliers.',
+        1, 730, (365), help="Set Length of Stay by maximum amount of days stayed in a shelter. \n"
+            "\n Example: A dog is listed as having stayed for 600 days. It will be filtered out if the slider is set below 600 days. \n"
+            "This is useful for filtering outliers where data logged may be inaccurate."
     )
 
     max_los = """ WHERE los <= %d """ % (max_los_slider_value)
@@ -288,7 +290,8 @@ def max_count_sidepanel():
 
     min_animal_slider_count = st.sidebar.slider(
         'Filter breeds with a low data count.',
-        1, 7, (1)
+        1, 7, (1), help="Some breeds have low record counts. \n"
+            "\n Example: Bolognese breed in Chicago has a recorded count of 2 dogs total. It will be filtered out if the slider is at 2 or above."
     )
 
     min_animal_count = """

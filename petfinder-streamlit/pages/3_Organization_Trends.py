@@ -11,7 +11,7 @@ st.sidebar.markdown("## Location Settings")
 pfglobals.org_locations()
 
 st.markdown("## Organization Trends from Petfinder Data")
-st.markdown("### How does an Organization affect length of time from intake to adoption?")
+st.markdown("### How does an Organization affect a dog's length of stay from intake to adoption?")
 st.caption("Use the sidebar filter to sort Organizations by location.")
 list_orgs_query = """
     SELECT DISTINCT(organization_name) FROM "%s" WHERE city = '%s' ORDER BY organization_name ASC;
