@@ -4,7 +4,7 @@ import pfglobals
 import requests
 import json
 
-st.set_page_config(layout="wide")
+st.set_page_config(page_title="Pet Slideshow", page_icon="🐇", layout="wide")
 
 token = pfglobals.get_token()
 headers = {"Authorization": f"Bearer {token}"}

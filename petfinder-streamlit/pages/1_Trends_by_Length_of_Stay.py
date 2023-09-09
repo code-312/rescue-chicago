@@ -13,7 +13,7 @@ import pfglobals
 import plotly.express as px
 import plotly.graph_objects as go
 
-st.set_page_config(layout="wide")
+st.set_page_config(page_title="Trends By Length of Stay", page_icon="🐕‍🦺", layout="wide")
 
 breed_trends_tab, other_trends_tab = st.tabs(["Breed Trends by Length of Stay", "Other Trends by Length of Stay"])
 

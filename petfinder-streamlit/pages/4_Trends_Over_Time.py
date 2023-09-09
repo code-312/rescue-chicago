@@ -8,7 +8,7 @@ if "selected_locations" not in st.session_state:
 
 curr_locations = st.session_state['selected_locations']
 
-st.set_page_config(layout="wide")
+st.set_page_config(page_title="Trends Over Time", page_icon="🐕‍🦺", layout="wide")
 
 monthly_trends_tab, yearly_trends_tab, los_trends_tab = st.tabs(["Monthly Trends", "Yearly Trends", "Length of Stay Trends"])
 

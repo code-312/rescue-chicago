@@ -10,7 +10,7 @@ from psycopg2.extras import RealDictCursor
 import pfglobals
 import plotly.graph_objects as go
 
-st.set_page_config(layout="wide")
+st.set_page_config(page_title="Trends By Count", page_icon="🐕‍🦺", layout="wide")
 
 breed_trends_tab, other_trends_tab = st.tabs(["Breed Trends by Count", "Other Trends by Count"])
 
