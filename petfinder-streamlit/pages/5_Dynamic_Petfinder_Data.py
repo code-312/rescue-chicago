@@ -4,15 +4,24 @@ import pfglobals
 import requests
 import json
 
-st.set_page_config(page_title="Pet Slideshow", page_icon="🐇", layout="wide")
+st.set_page_config(page_title="Pet Slideshow", page_icon="🐇", layout="centered")
+if "page_number" not in st.session_state:
+    st.session_state['page_number'] = 0
+if "petfinder_animals" not in st.session_state:
+    st.session_state['petfinder_animals'] = []
 
 token = pfglobals.get_token()
 headers = {"Authorization": f"Bearer {token}"}
 
-animal_type = st.sidebar.selectbox('Select an Animal Type.', ['Dog', 'Cat', 'Rabbit', 'Small & Furry', 'Horse', 'Bird', 'Scales, Fins & Other', 'Barnyard'])
-adoption_status = st.sidebar.selectbox('Select Adoption Status.', ["Adoptable", "Adopted", "Found"])
-location = st.sidebar.text_input('Location', help="Postal Code or City, State", value="Chicago, IL", placeholder="Chicago, IL")
+def reset_session_state():
+    st.session_state['petfinder_animals'] = []
+    st.session_state['page_number'] = 0
 
+animal_type = st.sidebar.selectbox('Select an Animal Type.', ['Dog', 'Cat', 'Rabbit', 'Small & Furry', 'Horse', 'Bird', 'Scales, Fins & Other', 'Barnyard'], on_change=reset_session_state)
+adoption_status = st.sidebar.selectbox('Select Adoption Status.', ["Adoptable", "Adopted", "Found"], on_change=reset_session_state)
+location = st.sidebar.text_input('Location', help="Postal Code or City, State", value="Chicago, IL", placeholder="Chicago, IL", on_change=reset_session_state)
+
+url = "https://api.petfinder.com/v2/animals"
 params = {
     "type": f"{animal_type}",
     "status": f"{adoption_status}",
@@ -20,24 +29,54 @@ params = {
     "location": f"{location}",
     "sort": "recent",
     "distance": 100,
-    "limit": 1,
+    "limit": 5,
     "page": 1,
 }
 
-url = "https://api.petfinder.com/v2/animals"
-response = requests.get(url, headers=headers, params=params)
-r = response.json()
-animal = dict((key,d[key]) for d in r["animals"] for key in d)
-print(json.dumps(r, indent=2))
-if r['animals'] == []:
+if st.session_state['petfinder_animals'] == []:
+    response = requests.get(url, headers=headers, params=params)
+    st.session_state['petfinder_animals'] = response.json()
+
+animals = dict((key,d[key]) for d in st.session_state['petfinder_animals']["animals"] for key in d)
+print(animals)
+
+if st.session_state['petfinder_animals']['animals'] == []:
     st.write("No Results")
 else:
-    st.write(animal["url"])
-    st.write(animal["age"])
-    st.write(animal["gender"])
-    st.write(animal["name"])
-    st.write(animal["description"])
-    if animal["primary_photo_cropped"] == None:
+    last_page = len(st.session_state['petfinder_animals']['animals'])
+    dog_link_url = st.session_state['petfinder_animals']['animals'][st.session_state['page_number']]["url"]
+    age = st.session_state['petfinder_animals']['animals'][st.session_state['page_number']]["age"]
+    gender = st.session_state['petfinder_animals']['animals'][st.session_state['page_number']]["gender"]
+    name = st.session_state['petfinder_animals']['animals'][st.session_state['page_number']]["name"]
+    description = st.session_state['petfinder_animals']['animals'][st.session_state['page_number']]["description"]
+    if st.session_state['petfinder_animals']['animals'][st.session_state['page_number']]["primary_photo_cropped"] == None:
+        image = "No images"
+    else:
+        image = st.session_state['petfinder_animals']['animals'][st.session_state['page_number']]["primary_photo_cropped"]["full"]
+    st.write(dog_link_url)
+    st.write(age)
+    st.write(gender)
+    st.write(name)
+    st.write(description)
+    if st.session_state['petfinder_animals']['animals'][0]["primary_photo_cropped"] == None:
         st.write("No images")
     else:
-       st.image(animal["primary_photo_cropped"]["full"], width=None)
+       st.image(image, width=None)
+
+
+prev, _ ,next = st.columns([1, 4, 1])
+
+if int(st.session_state['page_number']) + 1 == int(last_page):
+    boo = True
+else:
+    boo = False
+
+def next_page():
+    st.session_state['page_number'] += 1
+
+next.button("Next", on_click=next_page, disabled=boo)
+
+def prev_page():
+    st.session_state['page_number'] -= 1
+
+prev.button("Previous", on_click=prev_page)

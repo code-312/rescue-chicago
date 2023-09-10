@@ -13,9 +13,11 @@ import pfglobals
 import plotly.express as px
 import plotly.graph_objects as go
 
+
 st.set_page_config(page_title="Trends By Length of Stay", page_icon="🐕‍🦺", layout="wide")
 
-breed_trends_tab, other_trends_tab = st.tabs(["Breed Trends by Length of Stay", "Other Trends by Length of Stay"])
+
+breed_trends_tab, other_trends_tab = st.tabs([":blue[📉 Breed Trends by Length of Stay]", ":blue[📉 Other Trends by Length of Stay]"])
 
 if "selected_breeds" not in st.session_state:
     st.session_state['selected_breeds'] = []
@@ -35,7 +37,7 @@ with breed_trends_tab:
                 "Use the Filter widget in the sidebar to exclude length of stay greater than the specified value (default is 365 days). ")
     st.sidebar.markdown("## Location Settings")
     pfglobals.location_sidepanel()
-    st.sidebar.caption("Note: Location setting only applies to the main chart.")
+    st.sidebar.caption("<b>Note: Location setting only applies to the main chart.</b>", unsafe_allow_html=True)
     st.sidebar.markdown("## Filter Settings")
     pfglobals.max_los_sidepanel()
     pfglobals.max_count_sidepanel()
@@ -47,7 +49,7 @@ with breed_trends_tab:
     # Set up where clause for only the breeds the user has selected, if they selected any
     with col2:
         st.markdown("### Chart Settings")
-        st.caption("Note: These settings also apply to the comparison chart below.")
+        st.caption("<b>Note: These settings also apply to the comparison chart below.</b>", unsafe_allow_html=True)
         number_of_breeds_slider = pfglobals.place_breeds_in_sidepanel()
         pfglobals.place_los_sort_in_sidepanel(number_of_breeds_slider)
     with col1:

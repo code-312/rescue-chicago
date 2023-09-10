@@ -290,8 +290,9 @@ def max_count_sidepanel():
 
     min_animal_slider_count = st.sidebar.slider(
         'Filter breeds with a low data count.',
-        1, 7, (1), help="Some breeds have low record counts. \n"
-            "\n Example: Bolognese breed in Chicago has a recorded count of 2 dogs total. It will be filtered out if the slider is at 2 or above."
+        1, 10, (1), help="Some breeds have low record counts. \n"
+            "\n Example: Bolognese breed in Chicago has a recorded count of 2 dogs total.  \n"
+            "It will be filtered out if the slider is at 2 or above."
     )
 
     min_animal_count = """

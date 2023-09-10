@@ -10,7 +10,7 @@ curr_locations = st.session_state['selected_locations']
 
 st.set_page_config(page_title="Trends Over Time", page_icon="🐕‍🦺", layout="wide")
 
-monthly_trends_tab, yearly_trends_tab, los_trends_tab = st.tabs(["Monthly Trends", "Yearly Trends", "Length of Stay Trends"])
+monthly_trends_tab, yearly_trends_tab, los_trends_tab = st.tabs([":blue[📈 Monthly Trends]", ":blue[📉 Yearly Trends]", ":blue[📊 Length of Stay Trends]"])
 
 st.sidebar.markdown("## Location Settings")
 pfglobals.location_sidepanel()
@@ -35,7 +35,7 @@ GROUP BY date, gender ORDER BY date
 with monthly_trends_tab:
     st.markdown("## Trends Over Time")
 
-    st.markdown("### How does intake vary over time?")
+    st.markdown("### How does intake vary monthly?")
     st.markdown("Sorted monthly starting from February 2010. Use the sidebar filter to add or remove locations.")
     st.markdown("#")
 
@@ -62,7 +62,7 @@ with monthly_trends_tab:
     ).properties(
         height=500
     ).configure_title(
-        fontSize=17,
+        fontSize=19,
         anchor='middle'
     ).configure_axis(
         labelFontSize=15,
@@ -77,7 +77,7 @@ with monthly_trends_tab:
 
 with yearly_trends_tab:
     st.markdown("## Trends Over Time")
-    st.markdown("### How does intake vary over time?")
+    st.markdown("### How does intake vary yearly?")
     st.markdown("Sorted yearly starting from 2010. Use the sidebar filter to add or remove locations.")
     st.markdown("#")
 
@@ -99,16 +99,16 @@ with yearly_trends_tab:
     ).properties(
         height=500
     ).configure_title(
-        fontSize=17,
+        fontSize=19,
         anchor='middle'
     ).configure_axis(
         labelFontSize=15,
         titleFontSize=15,
         titleFontWeight=600
     ).configure_mark(
-        color='#a3c7ea',
+        color='#0867a1',
     )
-    st.altair_chart(yearly_trends_chart, theme=None, use_container_width=True)
+    st.altair_chart(yearly_trends_chart, use_container_width=True)
 
 with los_trends_tab:
     st.markdown("## Trends Over Time")
@@ -148,13 +148,13 @@ with los_trends_tab:
     ).properties(
         height=500
     ).configure_title(
-        fontSize=17,
+        fontSize=19,
         anchor='middle'
     ).configure_axis(
         labelFontSize=15,
         titleFontSize=15,
         titleFontWeight=600
     ).configure_mark(
-        color='#e08366',
+        color='#0867a1',
     ).interactive()
     st.altair_chart(los_trends_chart, use_container_width=True)
