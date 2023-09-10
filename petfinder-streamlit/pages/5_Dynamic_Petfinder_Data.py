@@ -5,10 +5,16 @@ import requests
 import json
 
 st.set_page_config(page_title="Pet Slideshow", page_icon="🐇", layout="centered")
+
 if "page_number" not in st.session_state:
     st.session_state['page_number'] = 0
 if "petfinder_animals" not in st.session_state:
     st.session_state['petfinder_animals'] = []
+# if "api_call_count" not in st.session_state:
+#     st.session_state['api_call_count'] = 0
+#session_state to keep track of API Calls
+
+
 
 token = pfglobals.get_token()
 headers = {"Authorization": f"Bearer {token}"}
@@ -37,8 +43,12 @@ if st.session_state['petfinder_animals'] == []:
     response = requests.get(url, headers=headers, params=params)
     st.session_state['petfinder_animals'] = response.json()
 
-animals = dict((key,d[key]) for d in st.session_state['petfinder_animals']["animals"] for key in d)
-print(animals)
+# animals = dict((key,d[key]) for d in st.session_state['petfinder_animals']["animals"] for key in d)
+# print(animals)
+def animals():
+    for animal in st.session_state['petfinder_animals']["animals"]:
+        print(animal)
+animals()
 
 if st.session_state['petfinder_animals']['animals'] == []:
     st.write("No Results")

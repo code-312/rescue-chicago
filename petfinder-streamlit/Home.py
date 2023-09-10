@@ -2,7 +2,7 @@ import streamlit as st
 
 st.set_page_config(page_title="Rescue Dog Trends", page_icon="🐶", layout="wide")
 
-st.header("Chicago Rescue Dog Trends", divider='blue')
+st.header("Rescue Dog Trends", divider='blue')
 intro_text = "In 2021 alone, Chicago Animal Care and Control, the city's only publicly funded shelter, took in 4," \
             "122 stray, surrendered, or confiscated dogs. While some of the dogs who end up in the municipal shelter " \
             "will be returned to their owner or adopted out directly, more than half of these animals are " \
