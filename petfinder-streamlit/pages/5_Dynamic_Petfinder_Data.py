@@ -1,20 +1,20 @@
 import os
 import streamlit as st
+from streamlit_carousel import carousel
+from datetime import datetime
 import pfglobals
 import requests
 import json
 
-st.set_page_config(page_title="Pet Slideshow", page_icon="🐇", layout="centered")
+st.set_page_config(page_title="Pet Slideshow", page_icon="🐇", layout="wide")
 
 if "page_number" not in st.session_state:
     st.session_state['page_number'] = 0
 if "petfinder_animals" not in st.session_state:
     st.session_state['petfinder_animals'] = []
-# if "api_call_count" not in st.session_state:
-#     st.session_state['api_call_count'] = 0
-#session_state to keep track of API Calls
 
-
+st.title("Petfinder Slideshow")
+st.write("**Live data pulled from petfinder in a slideshow format. Dog's have a predictive model applied to their length of stay.**")
 
 token = pfglobals.get_token()
 headers = {"Authorization": f"Bearer {token}"}
@@ -43,50 +43,75 @@ if st.session_state['petfinder_animals'] == []:
     response = requests.get(url, headers=headers, params=params)
     st.session_state['petfinder_animals'] = response.json()
 
-# animals = dict((key,d[key]) for d in st.session_state['petfinder_animals']["animals"] for key in d)
-# print(animals)
-def animals():
-    for animal in st.session_state['petfinder_animals']["animals"]:
-        print(animal)
-animals()
+
+
+animals = [animal for animal in st.session_state['petfinder_animals']["animals"]]
+page_number = st.session_state['page_number']
+col1, col2 = st.columns([1, 2])
 
 if st.session_state['petfinder_animals']['animals'] == []:
     st.write("No Results")
 else:
-    last_page = len(st.session_state['petfinder_animals']['animals'])
-    dog_link_url = st.session_state['petfinder_animals']['animals'][st.session_state['page_number']]["url"]
-    age = st.session_state['petfinder_animals']['animals'][st.session_state['page_number']]["age"]
-    gender = st.session_state['petfinder_animals']['animals'][st.session_state['page_number']]["gender"]
-    name = st.session_state['petfinder_animals']['animals'][st.session_state['page_number']]["name"]
-    description = st.session_state['petfinder_animals']['animals'][st.session_state['page_number']]["description"]
-    if st.session_state['petfinder_animals']['animals'][st.session_state['page_number']]["primary_photo_cropped"] == None:
-        image = "No images"
-    else:
-        image = st.session_state['petfinder_animals']['animals'][st.session_state['page_number']]["primary_photo_cropped"]["full"]
-    st.write(dog_link_url)
-    st.write(age)
-    st.write(gender)
-    st.write(name)
-    st.write(description)
-    if st.session_state['petfinder_animals']['animals'][0]["primary_photo_cropped"] == None:
-        st.write("No images")
-    else:
-       st.image(image, width=None)
+    last_page = len(animals)
+    link = animals[page_number]["url"]
+    age = animals[page_number]["age"]
+    gender = animals[page_number]["gender"]
+    name = animals[page_number]["name"]
+    petfinder_link = f"<a href=\"{link}\" target=\"_blank\">{name}'s Petfinder Link</a>"
+    breed = animals[page_number]["breeds"]["primary"]
+    description = animals[page_number]["description"] if animals[page_number]["description"] != None else "No Description Available."
+    secondary_breed = animals[page_number]["breeds"]["secondary"] if animals[page_number]["breeds"]["secondary"] != None else ""
+    size = animals[page_number]["size"] if animals[page_number]["size"] != None else ""
+    location = animals[page_number]["contact"]["address"]["city"] + "," + animals[page_number]["contact"]["address"]["state"]
+    published_at = animals[page_number]["published_at"][:10]
+    images = []
+    if animals[page_number]["primary_photo_cropped"] != None:
+        for image in animals[page_number]["photos"]:
+            images.append(dict(
+                interval=5000,
+                img=image['large'],
+                title=name,
+                text=breed,
+            ))
+    with col1:
+        if animals[page_number]["primary_photo_cropped"] == None:
+            st.image("noimages.webp", use_column_width="always")
+        else:
+                if len(images) > 1:
+                    carousel(items=images, width=1, height=600)
+                else:
+                    st.image(images[0]['img'], use_column_width="auto")
+    with col2:
+        st.subheader(f'{name} - [{name}\'s Petfinder Link]({link})', divider="rainbow")
+        st.markdown(f":blue[**Date Posted:**] " + str(published_at))
+        if animals[page_number]["type"] == "Dog":
+            st.write(f":blue[**Average Length of Stay:**] ")
+            st.write(f":blue[**Median Length of Stay:**] ")
+        st.write(f":blue[**Breed:**] " + breed)
+        st.markdown(f":blue[**Secondary Breed:**] " + secondary_breed)
+        st.markdown(f":blue[**Age:**] " + age)
+        st.markdown(f":blue[**Gender:**] " + gender)
+        st.markdown(f":blue[**Size:**] " + size)
+        st.markdown(f":blue[**Location:**] " + location)
+        st.markdown(f":blue[**Description:**] " + description)
+        st.markdown("# ")
+        _, prev ,next = st.columns([1, 10, 5])
+        if int(page_number) + 1 == int(last_page):
+            is_last_page = True
+        else:
+            is_last_page = False
 
+        if int(page_number) == 0:
+            is_first_page = True
+        else:
+            is_first_page = False
 
-prev, _ ,next = st.columns([1, 4, 1])
+        def next_page():
+            st.session_state['page_number'] += 1
 
-if int(st.session_state['page_number']) + 1 == int(last_page):
-    boo = True
-else:
-    boo = False
+        next.button("Next", on_click=next_page, disabled=is_last_page)
 
-def next_page():
-    st.session_state['page_number'] += 1
+        def prev_page():
+            st.session_state['page_number'] -= 1
 
-next.button("Next", on_click=next_page, disabled=boo)
-
-def prev_page():
-    st.session_state['page_number'] -= 1
-
-prev.button("Previous", on_click=prev_page)
+        prev.button("Previous", on_click=prev_page, disabled=is_first_page)
