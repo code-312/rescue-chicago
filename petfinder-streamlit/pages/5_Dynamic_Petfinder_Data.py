@@ -7,14 +7,16 @@ import requests
 import json
 import pandas as pd
 
-st.set_page_config(page_title="Pet Slideshow", page_icon="🐇", layout="wide")
+st.set_page_config(page_title="Pawsitive Finder", page_icon="🐇", layout="wide")
+"""
 
+"""
 if "page_number" not in st.session_state:
     st.session_state['page_number'] = 0
 if "petfinder_animals" not in st.session_state:
     st.session_state['petfinder_animals'] = []
 
-st.title("Petfinder Slideshow")
+st.title("Pawsitive Finder")
 st.markdown("Live data pulled from Petfinder in a slideshow format. If you are interested in the animal, please click the Petfinder link for more detailed information!")
 st.markdown("# ")
 token = pfglobals.get_token()
