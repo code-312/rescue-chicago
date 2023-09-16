@@ -20,7 +20,7 @@ st.markdown("- <a href=\"/Trends_by_Length_of_Stay\" target=\"_self\">Trends by 
 st.markdown("* <a href=\"/Trends_by_Count\" target=\"_self\">Trends by Count</a><p>How dog breed relates to the number of dogs waiting to be adopted.</p>", unsafe_allow_html=True)
 st.markdown("* <a href=\"/Organization_Trends\" target=\"_self\">Organization Trends</a><p>Individual Organization data related to length of stay from intake to adoption.", unsafe_allow_html=True)
 st.markdown("* <a href=\"/Trends_Over_Time\" target=\"_self\">Trends Over Time</a><p>How intake and length of stay vary over time.</p>", unsafe_allow_html=True)
-st.markdown("* <a href=\"/Dynamic_Petfinder_Data\" target=\"_self\">Pet Slideshow</a><p>Live data from Petfinder in a slideshow format.</p>", unsafe_allow_html=True)
+st.markdown("* <a href=\"/Pawsitive_Finder\" target=\"_self\">Pet Slideshow</a><p>Live data from Petfinder in a slideshow format.</p>", unsafe_allow_html=True)
 
 st.header("Acknowledgements", divider='green')
 cfc_github_link = "<a href=\"https://github.com/Code-For-Chicago/rescue-chicago\" target=\"_blank\">Github</a>"
