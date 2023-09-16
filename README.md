@@ -178,10 +178,10 @@ Once that's done you can follow the guide up above. Use [TablePlus](https://tabl
 
 ✅ Adoptability Rating -  Train regression model to predict LOS.
 
-Expand to other pets.
+✅ Expand to other pets.
 
 ## Conclusion and Contributions
-Contributions:  <a href="https://github.com/kaylarobinson077">Kayla Robinson</a>, <a href="https://github.com/TheeChris">Chris Lynch</a>, <a href="https://github.com/ecooperman">Evan Cooperman</a>, Joseph Adorno, Cara Karter, <a href="https://github.com/Jared-Kunhart">Jared Kunhart</a>, <a href="https://github.com/JJD129">Jhen Dimaano</a>, <a href="https://github.com/VegetablePC">Jon Hall</a>, <a href="https://github.com/JayDrojas">Damian Rojas</a>, <a href="https://github.com/Fiasco071">Steve Choi</a>, <a href="https://github.com/sophmain">Sophie Main</a>
+Contributions:  <a href="https://github.com/kaylarobinson077">Kayla Robinson</a>, <a href="https://github.com/TheeChris">Chris Lynch</a>, <a href="https://github.com/ecooperman">Evan Cooperman</a>, Joseph Adorno, Cara Karter, <a href="https://github.com/Jared-Kunhart">Jared Kunhart</a>, <a href="https://github.com/JJD129">Jhen Dimaano</a>, <a href="https://github.com/VegetablePC">Jon Hall</a>, <a href="https://github.com/JayDrojas">Damian Rojas</a>, <a href="https://github.com/Fiasco071">Steve Choi</a>
 
 <h5>Project originally made during Women Who Code Hackathon for Social Good 2022.</h5>
 
