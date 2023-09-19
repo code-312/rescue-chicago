@@ -63,11 +63,12 @@ else:
     link = animals[page_number]["url"]
     age = animals[page_number]["age"]
     gender = animals[page_number]["gender"]
-    name = animals[page_number]["name"]
-    petfinder_link = f"<a href=\"{link}\" target=\"_blank\">{name}'s Petfinder Link</a>"
+    n = animals[page_number]["name"]
+    name = n.replace("$", "")
     breed = animals[page_number]["breeds"]["primary"]
     spayed_neutered = animals[page_number]["attributes"]["spayed_neutered"]
-    description = animals[page_number]["description"] if animals[page_number]["description"] != None else "No Description Available."
+    d = animals[page_number]["description"] if animals[page_number]["description"] != None else "No Description Available."
+    description = d.replace("&amp;#39;", "'")
     secondary_breed = animals[page_number]["breeds"]["secondary"] if animals[page_number]["breeds"]["secondary"] != None else ""
     location = animals[page_number]["contact"]["address"]["city"] + ", " + animals[page_number]["contact"]["address"]["state"]
     with col1:
@@ -103,7 +104,7 @@ else:
             published = pd.to_datetime(animals[page_number]["published_at"])
             los = (status_changed_at - published).days
             st.markdown(f":blue[**Length of Stay:**]  {los} days")
-        st.code(f"Description:\n{description}")
+        st.code(f"Description:\n{description}", language=None)
 _, prev, next = st.columns([6, 5, 7])
 if int(page_number) + 1 == int(last_page):
     is_last_page = True
