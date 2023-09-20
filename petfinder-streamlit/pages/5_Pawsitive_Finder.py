@@ -2,6 +2,7 @@ import streamlit as st
 import pfglobals
 import requests
 import pandas as pd
+import streamlit.components.v1 as components
 
 st.set_page_config(page_title="Pawsitive Finder", page_icon="🐇", layout="wide")
 
@@ -11,8 +12,7 @@ if "petfinder_animals" not in st.session_state:
     st.session_state['petfinder_animals'] = []
 
 st.title(":blue[Pawsitive Finder]")
-st.markdown("Live data pulled from Petfinder in a slideshow format. If you are interested in the animal, please click the Petfinder link for more detailed information!")
-st.markdown("# ")
+st.markdown("Live data pulled from Petfinder. Click the Petfinder link for more detailed information!")
 
 token = pfglobals.get_token()
 headers = {"Authorization": f"Bearer {token}"}
@@ -68,7 +68,8 @@ else:
     breed = animals[page_number]["breeds"]["primary"]
     spayed_neutered = animals[page_number]["attributes"]["spayed_neutered"]
     d = animals[page_number]["description"] if animals[page_number]["description"] != None else "No Description Available."
-    description = d.replace("&amp;#39;", "'")
+    des = d.replace("&#039;", "'")
+    description = des.replace("&amp;#39;", "'")
     secondary_breed = animals[page_number]["breeds"]["secondary"] if animals[page_number]["breeds"]["secondary"] != None else ""
     location = animals[page_number]["contact"]["address"]["city"] + ", " + animals[page_number]["contact"]["address"]["state"]
     with col1:
@@ -105,6 +106,7 @@ else:
             los = (status_changed_at - published).days
             st.markdown(f":blue[**Length of Stay:**]  {los} days")
         st.code(f"Description:\n{description}", language=None)
+
 _, prev, next = st.columns([6, 5, 7])
 if int(page_number) + 1 == int(last_page):
     is_last_page = True
@@ -118,9 +120,28 @@ else:
 
 def next_page():
     st.session_state['page_number'] += 1
+    components.html(
+        f"""
+            <p>{st.session_state['page_number']}</p>
+            <script>
+                window.parent.document.querySelector('section.main').scrollTo(0, 0);
+            </script>
+        """,
+        height=0
+    )
 
 next.button("Next", on_click=next_page, disabled=is_last_page)
+
 def prev_page():
     st.session_state['page_number'] -= 1
+    components.html(
+        f"""
+            <p>{st.session_state['page_number']}</p>
+            <script>
+                window.parent.document.querySelector('section.main').scrollTo(0, 0);
+            </script>
+        """,
+        height=0
+    )
 
 prev.button("Previous", on_click=prev_page, disabled=is_first_page)
