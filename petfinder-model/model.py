@@ -1,13 +1,12 @@
 import os
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.cluster import KMeans
-from sklearn.metrics import accuracy_score, classification_report
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.decomposition import PCA
+import joblib
 
 
 # Import necessary constants and functions from config.py
@@ -33,7 +32,7 @@ def preprocess_data(df):
     df['size'] = df['size'].map(SIZE_DICT).astype(int)
 
     # Drop rows with unknown gender
-    df = df[df['gender'] != 'Unknown']
+    df.drop(df[df['gender'] == 'Unknown'].index, inplace=True)
 
     # Convert binary columns to binary (0/1) data type
     df[BINARY_COLS] = df[BINARY_COLS].astype(bool).astype(int)
@@ -92,18 +91,6 @@ def train_kmeans_clustering(df):
         kmeans.fit(full_data)
         ssd.append(kmeans.inertia_)
 
-    # Create a dataframe with the k values and corresponding ssd
-    df_ssd = pd.DataFrame({'k': range(1, 11), 'ssd': ssd})
-
-    # Create the line plot using matplotlib
-    plt.figure(figsize=(10, 6))
-    plt.plot(df_ssd['k'], df_ssd['ssd'], marker='o')
-    plt.title('Elbow Method')
-    plt.xlabel('Number of Clusters (k)')
-    plt.ylabel('Sum of Squared Distances')
-    plt.grid(True)
-    plt.show()
-
     # Fit PCA with a specified number of components
     pca = PCA(n_components=14, random_state=42)
     df_pca = pca.fit_transform(full_data)
@@ -157,7 +144,7 @@ def main():
     y = df['Cluster']
 
     # Split the data into training and testing sets
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, _ = train_test_split(X, y, test_size=0.2, random_state=42)
 
     # Train Random Forest classification model
     clf = train_random_forest_classification(X_train, y_train)
@@ -165,8 +152,9 @@ def main():
     # Predict on the test set
     y_pred = clf.predict(X_test)
 
-    # Evaluate the classifier
-    accuracy = accuracy_score(y_test, y_pred)
-    print(f"Accuracy: {accuracy*100:.2f}%")
-    print(classification_report(y_test, y_pred))
+    # Save the trained model to a file
+    joblib.dump(clf, 'random_forest_model.pkl') 
+
+    return(y_pred)
+
 
