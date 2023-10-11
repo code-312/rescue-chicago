@@ -167,7 +167,7 @@ CREATE DATABASE app_name WITH OWNER username;
 Add a DATABASE_URL with your updated username, password and database name to your .env file. The DATABASE_URL line in your .env file should look like this with your details instead.
 > DATABASE_URL=postgresql://username_goes_here:password_goes_here@localhost/app_name_here
 
-Once that's done you can follow the guide up above. I recommend using [TablePlus](https://tableplus.com/) or [Postbird](https://github.com/Paxa/postbird) to view the data.
+Once that's done you can follow the guide up above. Use [TablePlus](https://tableplus.com/) or [Postbird](https://github.com/Paxa/postbird) to view the data.
 
 ## What's next
 ✅ Expand dataset to other major metro areas in the US.
@@ -176,12 +176,12 @@ Once that's done you can follow the guide up above. I recommend using [TablePlus
 
 ✅ Compare Organizations and their length of stay.
 
-Adoptability Rating -  Train regression model to predict LOS.
+✅ Adoptability Rating -  Train regression model to predict LOS.
 
-Expand to other pets.
+✅ Expand to other pets.
 
 ## Conclusion and Contributions
-Contributions:  <a href="https://github.com/kaylarobinson077">Kayla Robinson</a>, <a href="https://github.com/TheeChris">Chris Lynch</a>, <a href="https://github.com/ecooperman">Evan Cooperman</a>, Joseph Adorno, Cara Karter, <a href="https://github.com/Jared-Kunhart">Jared Kunhart</a>, <a href="https://github.com/JJD129">Jhen Dimaano</a>, <a href="https://github.com/VegetablePC">Jon Hall</a>, <a href="https://github.com/JayDrojas">Damian Rojas</a>, <a href="https://github.com/Fiasco071">Steve Choi</a>, <a href="https://github.com/sophmain">Sophie Main</a>
+Contributions:  <a href="https://github.com/kaylarobinson077">Kayla Robinson</a>, <a href="https://github.com/TheeChris">Chris Lynch</a>, <a href="https://github.com/ecooperman">Evan Cooperman</a>, Joseph Adorno, Cara Karter, <a href="https://github.com/Jared-Kunhart">Jared Kunhart</a>, <a href="https://github.com/JJD129">Jhen Dimaano</a>, <a href="https://github.com/VegetablePC">Jon Hall</a>, <a href="https://github.com/JayDrojas">Damian Rojas</a>, <a href="https://github.com/Fiasco071">Steve Choi</a>
 
 <h5>Project originally made during Women Who Code Hackathon for Social Good 2022.</h5>
 

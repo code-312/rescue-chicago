@@ -50,14 +50,14 @@ def run_query(query, conn):
 conn_no_dict = init_connection(False)
 conn_dict = init_connection(True)
 
-
+@st.cache_data
 def create_data_frame(data, index_column):
     df = pd.DataFrame().from_dict(data)
     if index_column:
         df.set_index(index_column, inplace=True)
     return df
 
-
+@st.cache_data
 def create_array_of_db_values(db_column):
     # First get the list of values to be used for user interactions
     list_values_query = """
@@ -129,6 +129,7 @@ def construct_where_clause(values, og_where_clause):
 
     return comparison_where_clause
 
+@st.cache_data
 def construct_comparison_query(left_values, right_values, og_where_clause, group_by_col, target_col):
     left_where_clause = construct_where_clause(left_values, og_where_clause)
     right_where_clause = construct_where_clause(right_values, og_where_clause)
@@ -154,14 +155,14 @@ def construct_comparison_query(left_values, right_values, og_where_clause, group
 
     return comparison_query
 
-
+@st.cache_data
 def get_comparison_dataframe(left_values, right_values, og_where_clause, group_by_col, target_col):
     comparison_query = construct_comparison_query(left_values, right_values, og_where_clause, group_by_col, target_col)
     query_results = run_query(comparison_query, conn_dict)
     df = create_data_frame(query_results, group_by_col)
     return df
 
-
+@st.cache_data
 def create_comparison_chart(column, values, og_where_clause, main_db_col, is_los):
     if not og_where_clause:
         comparison_where_clause = WHERE_START
@@ -267,21 +268,19 @@ def location_sidepanel():
         location_array.append(location[0])
 
     location_list = st.sidebar.multiselect(
-        'City (clear selections to show all location data.)', location_array, st.session_state.selected_locations, key="selected_locations"
+        'Select a City (clear selections to show all locations.)', location_array, st.session_state.selected_locations, key="selected_locations"
     )
+
+    return location_list
 
 def max_los_sidepanel():
     global max_los
 
-    # max_los_query = """
-    #     SELECT MAX(los) FROM "%s";
-    #     """ % DATABASE_TABLE
-
-    # max_bound_los = run_query(max_los_query, conn_no_dict)
-
     max_los_slider_value = st.sidebar.slider(
-        'Set Maximum Length of Stay to filter outliers. (Default is filtering out a length of stay 365 days or greater)',
-        1, 365, (365)
+        'Set Maximum Length of Stay to filter outliers.',
+        1, 730, (365), help="Set Length of Stay by maximum amount of days stayed in a shelter. \n"
+            "\n Example: A dog is listed as having stayed for 600 days. It will be filtered out if the slider is set below 600 days. \n"
+            "This is useful for filtering outliers where data logged may be inaccurate."
     )
 
     max_los = """ WHERE los <= %d """ % (max_los_slider_value)
@@ -290,8 +289,10 @@ def max_count_sidepanel():
     global min_animal_count
 
     min_animal_slider_count = st.sidebar.slider(
-        'Filter out breeds with a small data count.',
-        1, 7, (1)
+        'Filter breeds with a low data count.',
+        1, 10, (1), help="Some breeds have low record counts. \n"
+            "\n Example: Bolognese breed in Chicago has a recorded count of 2 dogs total.  \n"
+            "It will be filtered out if the slider is at 2 or above."
     )
 
     min_animal_count = """
@@ -350,7 +351,7 @@ if "DATABASE_TABLE" in os.environ:
 else:
     DATABASE_TABLE = "petfinder_with_dates"
 
-
+@st.cache_data
 def show_bar_chart(data_frame, plotly_y, plotly_text, remove_count):
     plotly_bar = ""
     if not showChartType or showChartType == ALL_CHART_TYPES or showChartType == ADVANCED_CHART_TYPE:
@@ -389,7 +390,7 @@ def org_locations():
         org_location_array.append(location[0])
     default_selection = org_location_array.index('Chicago')
     org_location = st.sidebar.selectbox(
-        'Show Organizations by location.', org_location_array, index=default_selection)
+        'Select a location.', org_location_array, index=default_selection)
 
 def check_for_secrets():
     assert os.getenv("PETFINDER_KEY") is not None
