@@ -8,15 +8,14 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.decomposition import PCA
 import joblib
 
-
 # Import necessary constants and functions from config.py
-from config import AGE_DICT, SIZE_DICT, TARGET_COLS, BINARY_COLS
+from config import AGE_DICT, SIZE_DICT, TARGET_COLS, BINARY_COLS, HEROKU_URL
 
 class ModelAndData:
     def __init__(self):
         self.model = None
         self.preprocessor = None
-        
+
     def read_data(self, uri):
         df_raw = pd.read_sql('petfinder_with_dates', uri)
         return df_raw
@@ -86,7 +85,7 @@ class ModelAndData:
         # Rescale data using Standard Scaler for better clustering results
         scaler = StandardScaler()
         full_data = scaler.fit_transform(df)
-        
+
         # Create a list to store the sum of squared distances for each k
         ssd = []
 
@@ -148,20 +147,17 @@ class ModelAndData:
 
         # Train Random Forest classification model
         self.model = self.train_random_forest_classification(X_train, y_train)
-        
+
     def save_model(self, filename):
         joblib.dump(self.model, filename)
 
 
 if __name__=="__main__":
-        HEROKU_URL = os.getenv('HEROKU_POSTGRESQL_AMBER_URL')
-        uri = HEROKU_URL
-        if uri.startswith("postgres://"):
-            uri = uri.replace("postgres://", "postgresql://", 1)
+    HEROKU_URL = os.getenv('HEROKU_POSTGRESQL_AMBER_URL')
+    uri = HEROKU_URL
+    if uri.startswith("postgres://"):
+        uri = uri.replace("postgres://", "postgresql://", 1)
 
-        model_and_data = ModelAndData()
-        model_and_data.main(uri)
-        model_and_data.save_model('random_forest_model.pkl')
-
-
-
+    model_and_data = ModelAndData()
+    model_and_data.main(uri)
+    model_and_data.save_model('random_forest_model.pkl')

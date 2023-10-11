@@ -1,3 +1,10 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+HEROKU_URL = os.getenv('HEROKU_POSTGRESQL_AMBER_URL')
+
 AGE_DICT={
     'Baby':'0',
     'Young':'1',
@@ -15,5 +22,5 @@ SIZE_DICT={
 TARGET_COLS = ["coat", "organization_name", "breed_primary",
                "color_primary", "city", "state"]
 
-BINARY_COLS = ["gender","breed_mixed", "breed_unknown", "attribute_spayed_neutered", "attribute_house_trained", 
+BINARY_COLS = ["gender","breed_mixed", "breed_unknown", "attribute_spayed_neutered", "attribute_house_trained",
                "attribute_shots_current", "attribute_special_needs"]
