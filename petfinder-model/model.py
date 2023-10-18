@@ -20,7 +20,7 @@ class ModelAndData:
         df_raw = pd.read_sql('petfinder_with_dates', uri)
         # Filter data to include only specific cities
         selected_cities = ["San Diego", "Dallas", "Chicago"]
-        df_filtered = df_raw[df_raw['City'].isin(selected_cities)]
+        df_filtered = df_raw[df_raw['city'].isin(selected_cities)]
         return df_filtered
 
     def preprocess_data(self, df):
