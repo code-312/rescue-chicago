@@ -6,7 +6,7 @@ from sklearn.cluster import KMeans
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.decomposition import PCA
-import json
+import joblib
 
 # Import necessary constants and functions from config.py
 from config import AGE_DICT, SIZE_DICT, TARGET_COLS, BINARY_COLS, HEROKU_URL
@@ -152,11 +152,7 @@ class ModelAndData:
         self.model = self.train_random_forest_classification(X_train, y_train)
 
     def save_model(self, filename):
-        # serialize model to JSON format
-        model_json = self.model.__dict__
-
-        with open(filename, 'w') as json_file:
-            json.dump(model_json, json_file)
+        joblib.dump(self.model, filename)
 
 
 if __name__=="__main__":
@@ -167,4 +163,4 @@ if __name__=="__main__":
 
     model_and_data = ModelAndData()
     model_and_data.main(uri)
-    model_and_data.save_model('random_forest_model.json')
+    model_and_data.save_model('random_forest_model.pkl')
