@@ -1,8 +1,8 @@
 import streamlit as st
 
-st.set_page_config(page_title="Rescue Dog Trends", page_icon="🐶", layout="wide")
+st.set_page_config(page_title="Animal Rescue Trends", page_icon="🐶", layout="wide")
 
-st.header("Rescue Dog Trends", divider='blue')
+st.header("Animal Rescue Trends", divider='blue')
 intro_text = "In 2021 alone, Chicago Animal Care and Control, the city's only publicly funded shelter, took in 4," \
             "122 stray, surrendered, or confiscated dogs. While some of the dogs who end up in the municipal shelter " \
             "will be returned to their owner or adopted out directly, more than half of these animals are " \
@@ -24,11 +24,10 @@ st.markdown("* <a href=\"/Pawsitive_Finder\" target=\"_self\">Pet Slideshow</a><
 
 st.header("Acknowledgements", divider='green')
 cfc_github_link = "<a href=\"https://github.com/Code-For-Chicago/rescue-chicago\" target=\"_blank\">Github</a>"
-rescue_chicago_link = "<a href=\"https://rescuechi.org/\" target=\"_blank\">Rescue Chicago</a>"
 petfinder_link = "<a href=\"https://www.petfinder.com/\" target=\"_blank\">Petfinder</a>"
 acknowledgements_text = f"Project documentation is available on {cfc_github_link}. The {petfinder_link} API is easily accessible through " \
                         "the Petfinder for Developers webpage. This project was originally inspired by conversations " \
-                        f"that the Code for Chicago data workgroup had with {rescue_chicago_link} about how data could inform " \
+                        f"that the Code for Chicago data workgroup had with Rescue Chicago* about how data could inform " \
                         "their efforts to support and unify Chicago's shelter and rescue community. This application " \
                         "was built by Evan Cooperman, Kayla Robinson, Cara Karter, Joseph Adorno, E. Chris Lynch, Jared Kunhart and Jhen Dimaano."
 st.write(acknowledgements_text, unsafe_allow_html=True)

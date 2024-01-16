@@ -1,5 +1,5 @@
-<h1 align="center">Rescue Chicago</h1>
-<h4 align="center">PetFinder Dashboard for Rescue Dogs - <a href="https://codeforchicago-rescuechi.herokuapp.com/">Live site</a></h4>
+<h1 align="center">Animal Rescue Trends</h1>
+<h4 align="center">PetFinder Dashboard for Rescue Animals - <a href="https://code312-rescue-trends-2659be78e6b4.herokuapp.com/">Live site</a></h4>
 
 <div align="center"><img src="https://github.com/Code-For-Chicago/rescue-chicago/assets/89172742/d1ea49d5-7329-4940-bad7-a665ace51971" width="552" height="278" /></div>
 
@@ -134,7 +134,7 @@ data_putter.py: When this file is run, it stores any information gathered from d
 
     To copy the uri manually, you will first need to be part of the team's Heroku account.
     Then, navigate to https://data.heroku.com/ and select the datastore called
-    `postgresql-corrugated-21223`. Click on `settings`, then `View Credentials...`, and look for a variable called `URI`.
+    `postgresql-transparent-96547`. Click on `settings`, then `View Credentials...`, and look for a variable called `URI`.
 
 - Option 2: CLI
 
@@ -185,5 +185,6 @@ Contributions:  <a href="https://github.com/kaylarobinson077">Kayla Robinson</a>
 
 <h5>Project originally made during Women Who Code Hackathon for Social Good 2022.</h5>
 
-### [Rescue Chicago](https://rescuechi.org/)
+### Rescue Chicago - <sub><sup>Ceased Operations Jan 1st, 2023</sup></sub>
+
 <img src="https://user-images.githubusercontent.com/89172742/193914404-16b5c6b5-bdf0-46e1-9e52-78c8b3cdd381.png" width="594" height="303" />
