@@ -46,7 +46,7 @@ with monthly_trends_tab:
     # year = st.sidebar.selectbox("Year", ["2010", "2011"])
     # monthly_df = monthly_df[monthly_df['date'] > year]
     monthly_df = monthly_df[monthly_df['date'] > '2010-01']
-    monthly_df = monthly_df[monthly_df['date'] < '2023-04']
+    # monthly_df = monthly_df[monthly_df['date'] < '2023-04']
     # For mutating the chart, not the query with a multiselectbox
     # loc = st.sidebar.multiselect("Location", ["Chicago", "Denver"])
     # monthly_df = monthly_df[monthly_df['city'].str.contains('|'.join(loc))]
@@ -84,17 +84,18 @@ with yearly_trends_tab:
     yearly_query = """
     SELECT count(id) as count_dogs
         , extract('year' from published_at) as status_changed_at_year
-    FROM petfinder_with_dates %s GROUP by 2 ORDER by 2
-    """ % (location_clause)
+    FROM "%s" %s GROUP by 2 ORDER by 2
+    """ % (pfglobals.DATABASE_TABLE, location_clause)
 
-    yearly_df = pfglobals.create_data_frame(pfglobals.run_query(yearly_query,  pfglobals.conn_dict), index_column="status_changed_at_year")
+    yearly_df = pfglobals.create_data_frame(pfglobals.run_query(yearly_query, pfglobals.conn_dict), index_column="status_changed_at_year")
     yearly_df = yearly_df.reset_index(drop=False)
     yearly_df = yearly_df.astype({"status_changed_at_year": str})
     yearly_df = yearly_df[yearly_df['status_changed_at_year'] > '2010']
+
     yearly_trends_chart = alt.Chart(yearly_df, title=f"{', '.join(curr_locations)} Trends by Year").mark_bar(size=60, align='center').encode(
-        x=alt.X('year(status_changed_at_year):O', title='Trends Over Time'),
+        x=alt.X('status_changed_at_year:O', title='Trends Over Time', axis=alt.Axis(labelAngle=0)),
         y=alt.Y('count_dogs', title='Total Dogs per Year'),
-        tooltip=[alt.Tooltip('year(status_changed_at_year):T', title='Year'),
+        tooltip=[alt.Tooltip('status_changed_at_year', title='Year'),
                 alt.Tooltip('count_dogs', title='Total Dogs')]
     ).properties(
         height=500
@@ -138,7 +139,7 @@ with los_trends_tab:
     los_df = pfglobals.create_data_frame(pfglobals.run_query(los_query,  pfglobals.conn_dict), index_column="date")
     los_df = los_df.reset_index(drop=False)
     los_df = los_df[los_df['date'] > '2013-01']
-    los_df = los_df[los_df['date'] < '2023-04']
+    # los_df = los_df[los_df['date'] < '2023-04']
     los_trends_chart = alt.Chart(los_df, title=f"{', '.join(st.session_state['selected_locations'])} Trends by Length of Stay").mark_bar().encode(
         x=alt.X('yearmonth(date):T', title='Trends Over Time'),
         y=alt.Y('los', title='Average Length of Stay'),
